@@ -4,9 +4,9 @@ uniform mat4 model;
 uniform mat4 view; 
 uniform mat4 projection;
 
-in vec4 vtxPos;
+in vec3 vtxPos;
 in vec4 vtxCol;
-in vec4 vtxNorm;
+in vec3 vtxNorm;
 
 out Data{
 	vec4 color;
@@ -16,10 +16,11 @@ out Data{
 
 void main(){
 	// transform the vertex position
-	gl_Position = projection * view * model * vtxPos;
+	gl_Position = projection * view * model * vec4(vtxPos, 1.0);
 
-	vec4 pos = view * model * vtxPos;
-	vec4 norm =  transpose(inverse(view * model)) * vtxNorm;
+	vec4 pos = view * model * vec4(vtxPos, 1.0);
+	vec4 norm =  transpose(inverse(view * model)) * vec4(vtxNorm, 1.0);
+	
 	Out.pos_interp = pos.xyz;
 	Out.norm_interp =  norm.xyz;
 

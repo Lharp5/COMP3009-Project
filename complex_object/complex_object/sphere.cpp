@@ -76,9 +76,9 @@ int Sphere::createSphere(int numLong, int numLat, Vertices &vtx, Indices &ind, V
 	int numCols;
 	int numVtx;
 	int numTriangles;
-	Vector4f pos;
+	Vector3f pos;
 	Vector4f col;
-	Vector4f norm;
+	Vector3f norm;
 	float alpha;
 	float beta;
 	float deltaAlpha;
@@ -111,14 +111,15 @@ int Sphere::createSphere(int numLong, int numLat, Vertices &vtx, Indices &ind, V
 			pos.x = cos(DegreeToRadians(alpha))*cos(DegreeToRadians(beta));
 			pos.y = cos(DegreeToRadians(alpha))*sin(DegreeToRadians(beta));
 			pos.z = sin(DegreeToRadians(alpha));
-			pos.w = 1.0;
 		
 			//spheres normals are just the point - the center, but the center is at 0,0 so we just normalize the point
-			norm = pos;
+			norm.x = pos.x;
+			norm.y = pos.y;
+			norm.z = pos.z;
 			norm.normalize();
 
 			if (colour == noColour){
-				vtx[k] = Vertex(pos, pos, norm);
+				vtx[k] = Vertex(pos, Vector4f(pos, 1.0), norm);
 			}
 			else{
 				vtx[k] = Vertex(pos, colour, norm);
