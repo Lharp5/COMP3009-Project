@@ -175,14 +175,14 @@ int Solution::initSolution()
 	Vector3f upVector = Vector3f(0, 1, 0);
 
 	camera.setCamera(viewerPosition, lookAtPoint, upVector);
-
+	
 	int rc;
 	Vertices vtx;
 	Indices ind;
 
 	//fancy object
 	Sphere ball;
-
+	Texture texture;
 	Material material;
 
 	// create the shader object
@@ -200,6 +200,7 @@ int Solution::initSolution()
 		goto err;
 	}
 
+	texture.loadTextures("wood_texture.jpg", GL_TEXTURE_2D);
 	Sphere::createSphere(200, 100, vtx, ind, Vector4f(1, 0, 0, 1));
 	ball.setId("ball3");
 	ball.setMaterial(material);
@@ -207,10 +208,10 @@ int Solution::initSolution()
 	//ball3.createVAO(garaudShader, vtx, ind);
 	ball.setInitialPosition(0, 0, 0);
 	//ball3.setInitialPosition(0, 0, 0);
-	ball.setInitialRotations(0, 0, 0);
+	ball.setInitialRotations(0, 90, 0);
 	//ball3.setScale(1, 1, 1);
 	ball.setScale(1, 1, 1);
-
+	ball.setTexture(texture);
 	world.addObject(&ball);
 
 

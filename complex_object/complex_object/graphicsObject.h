@@ -43,6 +43,7 @@
 #include <vector>
 #include <string>
 #include "material.h"
+#include "Texture.h"
 
 class GraphicsObject
 {
@@ -82,6 +83,12 @@ public:
 	*	Purpose:	To set the Material file to be used, if shader supports materials. Note: Copies the Material data over.
 	*/
 	void setMaterial(const Material material);
+
+	/*	setTexture
+	*	in:			Texture to be set
+	*	Purpose:	To set the Texture to be used, if shader supports materials. Note: Copies the Texture data over.
+	*/
+	void setTexture(const Texture texture);
 	
 	/*	getMaterial
 	*	out:		a pointer to our material
@@ -115,7 +122,9 @@ protected:
 	int numIndices;
 	Material material;
 	Shader shader;
+	Texture texture;
 	bool materialUsed;
+	bool textureUsed;
 
 	//rendering Children with our location as their start point
 	void renderChildren(Matrix4f base);

@@ -79,6 +79,7 @@ int Sphere::createSphere(int numLong, int numLat, Vertices &vtx, Indices &ind, V
 	Vector3f pos;
 	Vector4f col;
 	Vector3f norm;
+	Vector2f texCoord;
 	float alpha;
 	float beta;
 	float deltaAlpha;
@@ -105,6 +106,8 @@ int Sphere::createSphere(int numLong, int numLat, Vertices &vtx, Indices &ind, V
 	deltaAlpha = (float)90.0 / numLat; // increment of alpha
 	beta = 0;   // angle of the longtidute 
 	deltaBeta = (float)360.0 / (numLong);	// increment of beta
+	float dTexX = 1.0 / numCols;
+	float dTexY = 1.0 / numRows;
 
 	for (i = 0, alpha = -90; i <= numRows; i++, alpha += deltaAlpha) {
 		for (j = 0, beta = 0; j <= numCols; j++, beta += deltaBeta) {
@@ -118,11 +121,14 @@ int Sphere::createSphere(int numLong, int numLat, Vertices &vtx, Indices &ind, V
 			norm.z = pos.z;
 			norm.normalize();
 
+			texCoord.x = j*dTexX;// = Vector2f(i / numRows, j / numCols);
+			texCoord.y = i*dTexY;
+
 			if (colour == noColour){
-				vtx[k] = Vertex(pos, Vector4f(pos, 1.0), norm);
+				vtx[k] = Vertex(pos, Vector4f(pos, 1.0), norm, texCoord);
 			}
 			else{
-				vtx[k] = Vertex(pos, colour, norm);
+				vtx[k] = Vertex(pos, colour, norm, texCoord);
 			}
 			
 			k++;
