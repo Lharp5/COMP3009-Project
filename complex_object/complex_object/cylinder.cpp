@@ -116,7 +116,7 @@ int Cylinder::createCylinder(int numLong, Vertices &vtx, Indices &ind)
 			pos.z = sin(DegreeToRadians(alpha));
 			pos.w = 1.0;
 
-			vtx[k] = Vertex(pos, pos, Vector4f(0,0,0,0));
+			vtx[k] = Vertex(pos.to3D(), pos, Vector3f(0,0,0));
 			k++;
 
 

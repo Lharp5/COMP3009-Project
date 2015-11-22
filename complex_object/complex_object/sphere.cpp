@@ -76,9 +76,10 @@ int Sphere::createSphere(int numLong, int numLat, Vertices &vtx, Indices &ind, V
 	int numCols;
 	int numVtx;
 	int numTriangles;
-	Vector4f pos;
+	Vector3f pos;
 	Vector4f col;
-	Vector4f norm;
+	Vector3f norm;
+	Vector2f texCoord;
 	float alpha;
 	float beta;
 	float deltaAlpha;
@@ -105,23 +106,29 @@ int Sphere::createSphere(int numLong, int numLat, Vertices &vtx, Indices &ind, V
 	deltaAlpha = (float)90.0 / numLat; // increment of alpha
 	beta = 0;   // angle of the longtidute 
 	deltaBeta = (float)360.0 / (numLong);	// increment of beta
+	float dTexX = 1.0 / numCols;
+	float dTexY = 1.0 / numRows;
 
 	for (i = 0, alpha = -90; i <= numRows; i++, alpha += deltaAlpha) {
 		for (j = 0, beta = 0; j <= numCols; j++, beta += deltaBeta) {
 			pos.x = cos(DegreeToRadians(alpha))*cos(DegreeToRadians(beta));
 			pos.y = cos(DegreeToRadians(alpha))*sin(DegreeToRadians(beta));
 			pos.z = sin(DegreeToRadians(alpha));
-			pos.w = 1.0;
 		
 			//spheres normals are just the point - the center, but the center is at 0,0 so we just normalize the point
-			norm = pos;
+			norm.x = pos.x;
+			norm.y = pos.y;
+			norm.z = pos.z;
 			norm.normalize();
 
+			texCoord.x = j*dTexX;// = Vector2f(i / numRows, j / numCols);
+			texCoord.y = i*dTexY;
+
 			if (colour == noColour){
-				vtx[k] = Vertex(pos, pos, norm);
+				vtx[k] = Vertex(pos, Vector4f(pos, 1.0), norm, texCoord);
 			}
 			else{
-				vtx[k] = Vertex(pos, colour, norm);
+				vtx[k] = Vertex(pos, colour, norm, texCoord);
 			}
 			
 			k++;

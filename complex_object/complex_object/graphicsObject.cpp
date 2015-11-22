@@ -158,6 +158,14 @@ int GraphicsObject::createVAO(Shader newShader, Vertices vtx, Indices ind)
 	glEnableVertexAttribArray(location);
 	glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, norm));
 
+	// copy the texture coords
+	location = glGetAttribLocation(shader.getProgId(), "texCoord");
+	//	if (location == -1) {
+	//	rc = -2;
+	//goto err;
+	//}
+	glEnableVertexAttribArray(location);
+	glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
 
 	//create index buffer
 	glGenBuffers(1, &indVBO);
@@ -228,6 +236,12 @@ int GraphicsObject::render(Matrix4f parentMatrix)
 		material.render(shader);
 	}
 
+	//passing the texture sample information
+	if (textureUsed){
+		texture.bindToTextureUnit(GL_TEXTURE1);
+		texture.setTextureSampler(shader, "texture", GL_TEXTURE1);
+	}
+
 	renderChildren(modelMat);
 
 	return 0;
@@ -244,6 +258,12 @@ void GraphicsObject::setMaterial(const Material material)
 {
 	materialUsed = true;
 	this->material = material; 
+}
+
+void GraphicsObject::setTexture(const Texture texture)
+{
+	textureUsed = true;
+	this->texture = texture;
 }
 
 Material* const GraphicsObject::getMaterial()

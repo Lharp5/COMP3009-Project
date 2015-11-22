@@ -1,5 +1,7 @@
 #version 330 core
 
+uniform sampler2D texture;
+
 uniform vec4 light_position;
 uniform vec4 light_colour;
 
@@ -17,6 +19,7 @@ in Data{
 	vec4 color;
 	vec3 norm_interp;
 	vec3 pos_interp;
+	vec2 texCoord;
 }In;
 
 out vec4 color;
@@ -66,13 +69,14 @@ void main()
 	calculate_light(light_position.xyz, Id, Is);
 	// output the colour
 	if(ambientOn == 1.0){
-		colour_val += In.color * ambient;
+		colour_val += texture2D(texture, In.texCoord) * ambient;
 	}
 	if(diffuseOn == 1.0){
-		colour_val += In.color * diffuse*Id * light_colour;
+		colour_val += texture2D(texture, In.texCoord) * diffuse*Id * light_colour;
 	}
 	if(specularOn == 1.0){
 		colour_val +=  specular*Is * light_colour;  //is this needed?
 	}
 	color = colour_val;
+	//color = texture2D(texture, In.texCoord);
 }
