@@ -43,6 +43,7 @@ public:
 	Cylinder(std::string id);
 	~Cylinder();
 	static int Cylinder::createCylinder(int numLong, Vertices &vtx, Indices &ind);
+	static int Cylinder::createCylinder(int numLong, Vertices &vtx, Indices &ind, Vector4f colour);
 
 };
 

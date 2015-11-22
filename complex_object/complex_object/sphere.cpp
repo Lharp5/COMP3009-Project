@@ -116,13 +116,10 @@ int Sphere::createSphere(int numLong, int numLat, Vertices &vtx, Indices &ind, V
 			pos.z = sin(DegreeToRadians(alpha));
 		
 			//spheres normals are just the point - the center, but the center is at 0,0 so we just normalize the point
-			norm.x = pos.x;
-			norm.y = pos.y;
-			norm.z = pos.z;
+			norm = Vector3f(pos.x, pos.y, pos.z);
 			norm.normalize();
 
-			texCoord.x = j*dTexX;// = Vector2f(i / numRows, j / numCols);
-			texCoord.y = i*dTexY;
+			texCoord = Vector2f(j*dTexX, i*dTexY);
 
 			if (colour == noColour){
 				vtx[k] = Vertex(pos, Vector4f(pos, 1.0), norm, texCoord);
@@ -132,13 +129,8 @@ int Sphere::createSphere(int numLong, int numLat, Vertices &vtx, Indices &ind, V
 			}
 			
 			k++;
-
-
 		}
 	}
-
-
-
 
 	// fill the index buffer
 

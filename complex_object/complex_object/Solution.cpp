@@ -182,6 +182,7 @@ int Solution::initSolution()
 
 	//fancy object
 	Sphere ball;
+	Cylinder log;
 	Texture texture;
 	Material material;
 
@@ -200,7 +201,7 @@ int Solution::initSolution()
 		goto err;
 	}
 
-	texture.loadTextures("wood_texture.jpg", GL_TEXTURE_2D);
+	texture.loadTextures("tree_bark_long.jpg", GL_TEXTURE_2D);
 	Sphere::createSphere(200, 100, vtx, ind, Vector4f(1, 0, 0, 1));
 	ball.setId("ball3");
 	ball.setMaterial(material);
@@ -212,10 +213,16 @@ int Solution::initSolution()
 	//ball3.setScale(1, 1, 1);
 	ball.setScale(1, 1, 1);
 	ball.setTexture(texture);
-	world.addObject(&ball);
+	//world.addObject(&ball);
 
-
-	
+	Cylinder::createCylinder(200, vtx, ind, Vector4f(0,0,1,1));
+	log.setId("log1");
+	log.setMaterial(material);
+	log.createVAO(phongShader, vtx, ind);
+	log.setInitialPosition(0, 0, 0);
+	log.setInitialRotations(0, 90, 0);
+	log.setScale(0.25, 0.25, 1);
+	world.addObject(&log);
 
 	err:
 	return 0;
@@ -259,7 +266,7 @@ void Solution::render()
 	//shader.copyMatrixToShader(viewMat, "view");
 	shader.copyMatrixToShader(camera.getViewMatrix(), "view");
 	
-	lightPos = camera.getViewMatrix() * Vector4f(240, 210,200, 1);
+	lightPos = camera.getViewMatrix() * Vector4f(0, 0, 5, 1);
 
 	// set the projection matrix
 	projMat = Matrix4f::symmetricPerspectiveProjectionMatrix(30, 2, .1, 1000);

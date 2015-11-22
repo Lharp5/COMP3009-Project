@@ -70,13 +70,14 @@ void main()
 	// output the colour
 	if(ambientOn == 1.0){
 		colour_val += texture2D(texture, In.texCoord) * ambient;
+		//colour_val += In.color * ambient;
 	}
 	if(diffuseOn == 1.0){
+		//colour_val += In.color * diffuse*Id * light_colour;
 		colour_val += texture2D(texture, In.texCoord) * diffuse*Id * light_colour;
 	}
 	if(specularOn == 1.0){
 		colour_val +=  specular*Is * light_colour;  //is this needed?
 	}
 	color = colour_val;
-	//color = texture2D(texture, In.texCoord);
 }

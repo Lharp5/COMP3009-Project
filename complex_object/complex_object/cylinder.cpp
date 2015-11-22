@@ -78,7 +78,10 @@ the function returns 0 is successful.
 
 */
 
-int Cylinder::createCylinder(int numLong, Vertices &vtx, Indices &ind)
+int Cylinder::createCylinder(int numLong, Vertices &vtx, Indices &ind){
+	return createCylinder(numLong, vtx, ind, Vector4f(-1, -1, -1, -1));
+}
+int Cylinder::createCylinder(int numLong, Vertices &vtx, Indices &ind, Vector4f colour)
 
 {
 	int i, j, k;
@@ -86,8 +89,11 @@ int Cylinder::createCylinder(int numLong, Vertices &vtx, Indices &ind)
 	int numCols;
 	int numVtx;
 	int numTriangles;
-	Vector4f pos;
+	Vector3f pos;
 	Vector4f col;
+	Vector4f noColour = Vector4f(-1, -1, -1, -1);
+	Vector3f normal;
+	Vector2f texCoord;
 	float alpha;
 	float beta;
 	float deltaAlpha;
@@ -108,15 +114,27 @@ int Cylinder::createCylinder(int numLong, Vertices &vtx, Indices &ind)
 	deltaAlpha = (float)90.0; // increment of alpha
 	beta = 0;   // angle of the longtidute 
 	deltaBeta = (float)360.0 / (numLong);	// increment of beta
+	float dTexX = 1.0 / numCols;
+	float dTexY = 1.0 / numRows;
 
 	for (i = 0, alpha = -45; i <= numRows; i++, alpha += deltaAlpha) {
 		for (j = 0, beta = 0; j <= numCols; j++, beta += deltaBeta) {
 			pos.x = cos(DegreeToRadians(alpha))*cos(DegreeToRadians(beta));
 			pos.y = cos(DegreeToRadians(alpha))*sin(DegreeToRadians(beta));
 			pos.z = sin(DegreeToRadians(alpha));
-			pos.w = 1.0;
+		
+			//Cylinder normal as a sphere not quite but good enough for now..
+			normal = Vector3f(pos.x, pos.y, pos.z);
+			normal.normalize();
 
-			vtx[k] = Vertex(pos.to3D(), pos, Vector3f(0,0,0));
+			texCoord = Vector2f(j*dTexX, i*dTexY);
+
+			if (colour == noColour){
+				vtx[k] = Vertex(pos, Vector4f(pos, 1.0), normal, texCoord);
+			}
+			else{
+				vtx[k] = Vertex(pos, colour, normal, texCoord);
+			}
 			k++;
 
 
