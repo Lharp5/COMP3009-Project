@@ -94,7 +94,6 @@
     <ClInclude Include="Solution.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Texture.h" />
     <ClInclude Include="world.h" />
   </ItemGroup>
   <ItemGroup>
@@ -106,7 +105,6 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Solution.cpp" />
     <ClCompile Include="sphere.cpp" />
-    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="world.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
