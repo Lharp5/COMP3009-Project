@@ -238,8 +238,8 @@ int GraphicsObject::render(Matrix4f parentMatrix)
 
 	//passing the texture sample information
 	if (textureUsed){
-		texture.bindToTextureUnit(GL_TEXTURE1);
-		texture.setTextureSampler(shader, "texture", GL_TEXTURE1);
+		texture.bindToTextureUnit();
+		texture.setTextureSampler(shader, "texture");
 	}
 
 	renderChildren(modelMat);

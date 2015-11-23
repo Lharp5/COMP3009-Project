@@ -26,11 +26,13 @@ Texture::~Texture()
 //  load a texture
 
 
-void Texture::loadTextures( char *imageFileName, GLuint texTarget)
+void Texture::loadTextures( char *imageFileName, GLuint texTarget, int texUnit)
 {
 
 	int width, height;
 	unsigned char* image = NULL;
+
+	textureUnit = texUnit;
 
 	// add the code
 	glGenTextures(1, &texId);
@@ -65,6 +67,15 @@ void Texture::bindToTextureUnit(int textureUnit)
 
 }
 
+void Texture::bindToTextureUnit()
+{
+
+	// add the code
+	glActiveTexture(GL_TEXTURE0 + texId);
+	glBindTexture(GL_TEXTURE_2D, texId);
+
+}
+
 
 /**********************************************************************************/
 
@@ -87,5 +98,19 @@ GLuint Texture::setTextureSampler(Shader shader, char *sampleName, GLuint sample
 	glUniform1i(location, samplerId - GL_TEXTURE0);
 
 	err:
+	return(rc);
+}
+
+GLuint Texture::setTextureSampler(Shader shader, char *sampleName)
+{
+	int location;
+	int rc = 0;
+
+
+	// add the code
+	location = glGetUniformLocation(shader.getProgId(), sampleName);
+	glUniform1i(location, texId);
+
+err:
 	return(rc);
 }

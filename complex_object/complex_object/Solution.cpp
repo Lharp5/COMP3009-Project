@@ -181,13 +181,13 @@ int Solution::initSolution()
 	Indices ind;
 
 	//fancy object
-	Sphere ball;
-	Texture texture;
+	
+	Texture texture, fireTexture;
 	Material material;
 	Campfire campfire;
 
 	// create the shader object
-	rc = shader.createShaderProgram("complexObjects1.vert", "complexObjects1.frag");
+	rc = shader.createShaderProgram("phong.vert", "phong.frag");
 	if (rc != 0) {
 		fprintf(stderr, "Error in generating shader (solution)\n");
 		rc = -1; 
@@ -201,21 +201,10 @@ int Solution::initSolution()
 		goto err;
 	}
 
-	texture.loadTextures("tree_bark_long.jpg", GL_TEXTURE_2D);
-	Sphere::createSphere(200, 100, vtx, ind, Vector4f(1, 0, 0, 1));
-	ball.setId("ball3");
-	ball.setMaterial(material);
-	ball.createVAO(phongShader, vtx, ind);
-	//ball3.createVAO(garaudShader, vtx, ind);
-	ball.setInitialPosition(0, 0, 0);
-	//ball3.setInitialPosition(0, 0, 0);
-	ball.setInitialRotations(0, 90, 0);
-	//ball3.setScale(1, 1, 1);
-	ball.setScale(1, 1, 1);
-	ball.setTexture(texture);
-	//world.addObject(&ball);
+	texture.loadTextures("tree_bark_long.jpg", GL_TEXTURE_2D, GL_TEXTURE1);
+	fireTexture.loadTextures("fire_temp.jpg", GL_TEXTURE_2D, GL_TEXTURE2);
 
-	campfire.setupCampfire(&phongShader, &texture);
+	campfire.setupCampfire(&phongShader, &texture, &shader, &fireTexture);
 	campfire.setInitialPosition(0, 0, 0);
 	campfire.setInitialRotations(0, 0, 0);
 	campfire.setScale(1, 1, 1);
@@ -261,14 +250,22 @@ void Solution::render()
 	viewMat = Matrix4f::cameraMatrix(Vector3f(200, 200, 200), Vector3f(100, 10, 100), Vector3f(0, 1, 0));
 	// move matrix to shader
 	//shader.copyMatrixToShader(viewMat, "view");
-	shader.copyMatrixToShader(camera.getViewMatrix(), "view");
 	
-	lightPos = camera.getViewMatrix() * Vector4f(0, 0, 5, 1);
+	lightPos = camera.getViewMatrix() * Vector4f(0, 0, 0, 1);
 
 	// set the projection matrix
 	projMat = Matrix4f::symmetricPerspectiveProjectionMatrix(30, 2, .1, 1000);
 	// move matrix to shader
+	shader.useProgram(1);
+	shader.copyMatrixToShader(camera.getViewMatrix(), "view");
 	shader.copyMatrixToShader(projMat, "projection");
+
+	shader.copyFloatToShader(ambientOn, "ambientOn");
+	shader.copyFloatToShader(diffuseOn, "diffuseOn");
+	shader.copyFloatToShader(specularOn, "specularOn");
+
+	shader.copyVectorToShader(lightPos, "light_position");
+	shader.copyVectorToShader(lightColour, "light_colour");
 	
 	//phong shader
 
