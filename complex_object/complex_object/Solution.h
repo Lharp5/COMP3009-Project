@@ -45,6 +45,7 @@
 #include "cylinder.h"
 #include "world.h"
 #include "camera.h"
+#include "campfire.h"
 
 
 

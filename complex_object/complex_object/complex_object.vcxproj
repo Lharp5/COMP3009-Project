@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
+    <ClInclude Include="campfire.h" />
     <ClInclude Include="cylinder.h" />
     <ClInclude Include="graphicsObject.h" />
     <ClInclude Include="material.h" />
@@ -100,6 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="campfire.cpp" />
     <ClCompile Include="complex_object.cpp" />
     <ClCompile Include="cylinder.cpp" />
     <ClCompile Include="graphicsObject.cpp" />

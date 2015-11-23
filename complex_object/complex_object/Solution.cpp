@@ -182,9 +182,9 @@ int Solution::initSolution()
 
 	//fancy object
 	Sphere ball;
-	Cylinder log;
 	Texture texture;
 	Material material;
+	Campfire campfire;
 
 	// create the shader object
 	rc = shader.createShaderProgram("complexObjects1.vert", "complexObjects1.frag");
@@ -215,14 +215,11 @@ int Solution::initSolution()
 	ball.setTexture(texture);
 	//world.addObject(&ball);
 
-	Cylinder::createCylinder(200, vtx, ind, Vector4f(0,0,1,1));
-	log.setId("log1");
-	log.setMaterial(material);
-	log.createVAO(phongShader, vtx, ind);
-	log.setInitialPosition(0, 0, 0);
-	log.setInitialRotations(0, 90, 0);
-	log.setScale(0.25, 0.25, 1);
-	world.addObject(&log);
+	campfire.setupCampfire(&phongShader, &texture);
+	campfire.setInitialPosition(0, 0, 0);
+	campfire.setInitialRotations(0, 0, 0);
+	campfire.setScale(1, 1, 1);
+	world.addObject(&campfire);
 
 	err:
 	return 0;
