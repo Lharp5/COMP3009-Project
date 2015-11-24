@@ -91,6 +91,7 @@
     <ClInclude Include="nuss_math.h" />
     <ClInclude Include="nuss_matrix.h" />
     <ClInclude Include="nuss_vector.h" />
+    <ClInclude Include="particle_system.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Solution.h" />
     <ClInclude Include="sphere.h" />
@@ -106,6 +107,7 @@
     <ClCompile Include="cylinder.cpp" />
     <ClCompile Include="graphicsObject.cpp" />
     <ClCompile Include="material.cpp" />
+    <ClCompile Include="particle_system.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Solution.cpp" />
     <ClCompile Include="sphere.cpp" />

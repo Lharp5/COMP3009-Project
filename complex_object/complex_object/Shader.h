@@ -57,7 +57,7 @@ public:
 	~Shader(void);
 
 	// creates a shader program from files vsFileName and fsFileName
-	int createShaderProgram(char * vsFileName, char * fsFileName);
+	int createShaderProgram(char * vsFileName, char * fsFileName, char* gsFileName = "_NOT_INCLUDED_");
 	GLuint	getProgId() const { return shaderProgramid; }
 
 	int printShaderStatus(void);
@@ -72,11 +72,11 @@ private:
 	GLuint vertShaderid;
 	GLuint fragShaderid;
 	GLuint shaderProgramid;
-
+	GLuint geoShaderid;
 	char * readCode(char * fileName);
 	int createShaderObj(char* fileName, int shaderType, GLuint *shaderid);
 	// functions creates a shader program.  The two shader programs (vertex and fragment) were already compiled.
-	GLint ceateShaderProgram(GLint vertShaderid, GLint fragShaderid, GLuint *shaderProgId);
+	GLint ceateShaderProgram(GLint vertShaderid, GLint fragShaderid, GLint geoShaderid, GLuint *shaderProgId);
 	int createShaderProgram(char * vsFileName, char * fsFileName, GLuint *shaderProgramid);
 
 
