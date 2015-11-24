@@ -1,46 +1,33 @@
-#version 400
+#version 330 core
 
-// Attributes passed automatically by OGRE
-in vec3 vertex;
-in vec3 normal;
-in vec4 colour;
+uniform mat4 model; 
+uniform mat4 view; 
+uniform mat4 projection;
 
-// Attributes passed with the material file
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 normal_mat;
-uniform vec3 up_vec;
-uniform float timer;
-uniform vec3 object_colour;
+in vec3 vtxPos;
+in vec4 vtxCol;
+in vec3 vtxNorm;
+in vec2 texCoord;
 
-// Attributes forwarded to the geometry shader
-out vec3 vertex_colour;
+out Data{
+	vec4 color;
+	vec3 norm_interp;
+	vec3 pos_interp;
+	vec2 texCoord;
+} Out;
 
+void main(){
+	// transform the vertex position
+	gl_Position = projection * view * model * vec4(vtxPos, 1.0);
 
-void main()
-{
-    // Let time cycle every four seconds
-	float circtime = timer - 4.0 * floor(timer / 4);
-	float t = circtime; // Our time parameter
+	vec4 pos = view * model * vec4(vtxPos, 1.0);
+	vec4 norm =  transpose(inverse(view * model)) * vec4(vtxNorm, 1.0);
 	
-	// Settings for the explosion
-	// Could also define these in the material file to have multiple particle systems with different settings
-    float grav = 0.005; // Gravity
-    float slow = 0.6; // Allows to slow down the explosion, control the speed of the explosion
-	
-	// Let's first work in model space (apply only world matrix)
-	vec4 position = model * vec4(vertex, 1.0);
-	vec4 norm = normal_mat * vec4(normal, 1.0);
+	Out.pos_interp = pos.xyz;
+	Out.norm_interp =  norm.xyz;
 
-    // Move point along normal and down with t*t (acceleration under gravity)
-    position.x += norm.x*t*slow - grav*slow*up_vec.x*t*t;
-    position.y += norm.y*t*slow - grav*slow*up_vec.y*t*t;
-    position.z += norm.z*t*slow - grav*slow*up_vec.z*t*t;
-	
-	// Now apply view transformation
-	gl_Position = view * position;
-	    
-	// Define color of vertex
-	//vertex_colour = colour.rgb; // Color define during the construction of the particles
-	vertex_colour = object_colour; // Uniform color assigned in material file
+	//setting the material components
+	// set the colour
+	Out.color = vtxCol;
+	Out.texCoord = texCoord;
 }

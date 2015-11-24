@@ -190,7 +190,7 @@ int Solution::initSolution()
 	material.setSpecular(Vector4f(0.2, 0.2, 0.2, 1));
 
 	// create the shader object
-	rc = shader.createShaderProgram("phong.vert", "phong.frag");
+	rc = shader.createShaderProgram("particle.vert", "particle.frag");
 	if (rc != 0) {
 		fprintf(stderr, "Error in generating shader (solution)\n");
 		rc = -1; 
