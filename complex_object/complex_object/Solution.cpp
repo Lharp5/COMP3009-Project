@@ -450,8 +450,9 @@ void Solution::winResize(int width, int height)
 
 int Solution::updateObjects(int numFrames)
 {
-	float timer = numFrames * 0.01;
+	float timer = numFrames * 0.05;
 	
+	shader.useProgram(1);
 	shader.copyFloatToShader(timer, "timer");
 
 	glutPostRedisplay();

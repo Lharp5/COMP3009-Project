@@ -1,5 +1,4 @@
-#version 330 core
-
+#version 400
 uniform sampler2D texture;
 
 uniform vec4 light_position;
