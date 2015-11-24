@@ -4,16 +4,16 @@
 #include "graphicsObject.h"
 #include "cylinder.h"
 #include "sphere.h"
+#include <math.h>
 class Campfire: public GraphicsObject{
 public:
 	Campfire();
 	~Campfire();
 
-	void setupCampfire(Shader* logShader, Texture* logTexture, Shader *fireShader, Texture* fireTexture);
-	int render();
+	void setupCampfire(Shader* logShader, Texture* logTexture, Shader *fireShader, Texture* fireTexture, Shader* rockShader, Texture* rockTexture);
 	void update();
 private:
-
+	void setupRocks(Shader* rockShader, Texture* rockTexture);
 };
 
 #endif

@@ -46,6 +46,7 @@
 #include "world.h"
 #include "camera.h"
 #include "campfire.h"
+#include "Surface.h"
 
 
 
@@ -78,6 +79,8 @@ public:
 	World world;
 	Shader shader;
 	Shader phongShader;
+	Shader surfaceShader;
+	Shader rockShader;
 	int numFrames;
 	static Solution *sol;
 

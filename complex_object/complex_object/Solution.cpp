@@ -144,7 +144,7 @@ void Solution::timerCB(int operation)
 
 /************************************************************/
 
-// timrt  function.  
+// timer  function.  
 
 
 int Solution::timer(int operation)
@@ -170,7 +170,7 @@ int Solution::initSolution()
 	//initialize the camera.
 	Vector3f viewerPosition = Vector3f(0, 1, 5);
 	//Vector3f viewerPosition = Vector3f(0, 0, 5);
-	Vector3f lookAtPoint = Vector3f(0, 0, 0);
+	Vector3f lookAtPoint = Vector3f(0, 1, 0);
 	//Vector3f lookAtPoint = Vector3f(0, 0, 0);
 	Vector3f upVector = Vector3f(0, 1, 0);
 
@@ -181,10 +181,13 @@ int Solution::initSolution()
 	Indices ind;
 
 	//fancy object
-	
-	Texture texture, fireTexture;
+	Surface surface;
+	Texture texture, fireTexture, grassTexture, rockTexture;
 	Material material;
 	Campfire campfire;
+
+	material.setShine(10);
+	material.setSpecular(Vector4f(0.2, 0.2, 0.2, 1));
 
 	// create the shader object
 	rc = shader.createShaderProgram("phong.vert", "phong.frag");
@@ -201,14 +204,42 @@ int Solution::initSolution()
 		goto err;
 	}
 
+	rc = surfaceShader.createShaderProgram("phong.vert", "phong.frag");
+	if (rc != 0) {
+		fprintf(stderr, "Error in generating shader (solution)\n");
+		rc = -1;
+		goto err;
+	}
+
+	rc = rockShader.createShaderProgram("phong.vert", "phong.frag");
+	if (rc != 0) {
+		fprintf(stderr, "Error in generating shader (solution)\n");
+		rc = -1;
+		goto err;
+	}
+
 	texture.loadTextures("tree_bark_long.jpg", GL_TEXTURE_2D, GL_TEXTURE1);
 	fireTexture.loadTextures("fire_temp.jpg", GL_TEXTURE_2D, GL_TEXTURE2);
+	grassTexture.loadTextures("grass_texture3.jpg", GL_TEXTURE_2D, GL_TEXTURE3);
+	rockTexture.loadTextures("rock_texture.jpg", GL_TEXTURE_2D, GL_TEXTURE4);
 
-	campfire.setupCampfire(&phongShader, &texture, &shader, &fireTexture);
+	campfire.setupCampfire(&phongShader, &texture, &shader, &fireTexture, &rockShader, &rockTexture);
+	campfire.setId("campfire");
 	campfire.setInitialPosition(0, 0, 0);
 	campfire.setInitialRotations(0, 0, 0);
 	campfire.setScale(1, 1, 1);
 	world.addObject(&campfire);
+
+	Surface::createSurface(6, 3, 100, 100, vtx, ind);
+	surface.createVAO(surfaceShader, vtx, ind);
+	surface.setId("grass");
+	surface.setTexture(grassTexture);
+	surface.setMaterial(material);
+	surface.setInitialPosition(0, -0.3, 0);
+	surface.setInitialRotations(0, 180, 0);
+	surface.setScale(10, 10, 10);
+	world.addObject(&surface);
+	
 
 	err:
 	return 0;
@@ -233,8 +264,8 @@ void Solution::render()
 {
 
 	Vector4f lightPos;
-	Vector4f lightColour = Vector4f(1.0, 1.0, 1.0, 1.0);
-	Matrix4f viewMat, projMat;	
+	Vector4f lightColour = Vector4f(0.612, 0.165, 0, 1.0);
+	Matrix4f projMat;	
 
 	// use the created shader
 	shader.useProgram(1);
@@ -244,10 +275,6 @@ void Solution::render()
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-
-
-	// set the camera matrix
-	viewMat = Matrix4f::cameraMatrix(Vector3f(200, 200, 200), Vector3f(100, 10, 100), Vector3f(0, 1, 0));
 	// move matrix to shader
 	//shader.copyMatrixToShader(viewMat, "view");
 	
@@ -266,6 +293,29 @@ void Solution::render()
 
 	shader.copyVectorToShader(lightPos, "light_position");
 	shader.copyVectorToShader(lightColour, "light_colour");
+
+
+	surfaceShader.useProgram(1);
+	surfaceShader.copyMatrixToShader(camera.getViewMatrix(), "view");
+	surfaceShader.copyMatrixToShader(projMat, "projection");
+
+	surfaceShader.copyFloatToShader(ambientOn, "ambientOn");
+	surfaceShader.copyFloatToShader(diffuseOn, "diffuseOn");
+	surfaceShader.copyFloatToShader(specularOn, "specularOn");
+
+	surfaceShader.copyVectorToShader(lightPos, "light_position");
+	surfaceShader.copyVectorToShader(lightColour, "light_colour");
+
+	rockShader.useProgram(1);
+	rockShader.copyMatrixToShader(camera.getViewMatrix(), "view");
+	rockShader.copyMatrixToShader(projMat, "projection");
+
+	rockShader.copyFloatToShader(ambientOn, "ambientOn");
+	rockShader.copyFloatToShader(diffuseOn, "diffuseOn");
+	rockShader.copyFloatToShader(specularOn, "specularOn");
+
+	rockShader.copyVectorToShader(lightPos, "light_position");
+	rockShader.copyVectorToShader(lightColour, "light_colour");
 	
 	//phong shader
 

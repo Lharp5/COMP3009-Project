@@ -79,7 +79,7 @@ int Surface::createSurface(int numLong, int numLat, float height, float width, V
 			// pos.w = 1.0;  DN 26/10/2015
 			texCoord.x = j*dTexX*texFactor;
 			texCoord.y = i*dTexY*texFactor;
-			vtx[k] = Vertex(pos, Vector4f(Vector3f::normalize(pos), 1.0), Vector3f(0,0,0),texCoord);  //DN 26/10/2015
+			vtx[k] = Vertex(pos, Vector4f(Vector3f::normalize(pos), 1.0), Vector3f(0,-1,0),texCoord);  //DN 26/10/2015
 			k++;
 
 

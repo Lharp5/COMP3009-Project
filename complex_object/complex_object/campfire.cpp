@@ -9,7 +9,7 @@ Campfire::~Campfire()
 
 }
 
-void Campfire::setupCampfire(Shader *logShader, Texture* logTexture, Shader *fireShader, Texture* fireTexture)
+void Campfire::setupCampfire(Shader *logShader, Texture* logTexture, Shader *fireShader, Texture* fireTexture, Shader* rockShader, Texture* rockTexture)
 {
 	Vertices vtx;
 	Indices ind;
@@ -79,7 +79,7 @@ void Campfire::setupCampfire(Shader *logShader, Texture* logTexture, Shader *fir
 
 
 	//circle of rocks around my campfire
-
+	setupRocks(rockShader, rockTexture);
 }
 
 void Campfire::update()
@@ -87,5 +87,26 @@ void Campfire::update()
 
 }
 
-int Campfire::render(){
+void Campfire::setupRocks(Shader* rockShader, Texture* rockTexture)
+{
+	Sphere rock[10];
+	Material rockMat;
+	Vertices vtx;
+	Indices ind;
+
+	float radius = 0.55; //radius of the campfire
+	float angle = (M_PI * 2) / 10;
+
+	Sphere::createSphere(200, 100, vtx, ind, Vector4f(1, 0, 0, 1));
+
+	for (int i = 0; i < 10; i++){
+		rock[i].setId("rock" + std::to_string(i));
+		rock[i].setMaterial(rockMat);
+		rock[i].createVAO(*rockShader, vtx, ind);
+		rock[i].setInitialPosition(radius*sin(i*angle), -0.3, radius*cos(i*angle));
+		rock[i].setInitialRotations(0, 0, 0);
+		rock[i].setScale(0.15, 0.15, 0.15);
+		rock[i].setTexture(*rockTexture);
+		addChild(&rock[i]);
+	}
 }
