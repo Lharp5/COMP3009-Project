@@ -450,8 +450,9 @@ void Solution::winResize(int width, int height)
 
 int Solution::updateObjects(int numFrames)
 {
-	// recall that this will be carried out in the model space
-	Sphere* spherePtr = (Sphere*) world.getObject("ball1");
+	float timer = numFrames * 0.01;
+	
+	shader.copyFloatToShader(timer, "timer");
 
 	glutPostRedisplay();
 	return 0;

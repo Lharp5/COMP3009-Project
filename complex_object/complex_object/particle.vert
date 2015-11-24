@@ -4,6 +4,8 @@ uniform mat4 model;
 uniform mat4 view; 
 uniform mat4 projection;
 
+uniform float timer;
+
 in vec3 vtxPos;
 in vec4 vtxCol;
 in vec3 vtxNorm;
@@ -17,9 +19,11 @@ out Data{
 } Out;
 
 void main(){
+
 	// transform the vertex position
 	gl_Position = projection * view * model * vec4(vtxPos, 1.0);
-
+	
+	vec4 upVector = view * model * vec4(0,1,0,1); //world up vector
 	vec4 pos = view * model * vec4(vtxPos, 1.0);
 	vec4 norm =  transpose(inverse(view * model)) * vec4(vtxNorm, 1.0);
 	
