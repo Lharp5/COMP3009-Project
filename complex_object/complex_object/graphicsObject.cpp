@@ -88,15 +88,15 @@ bool GraphicsObject::addChild(GraphicsObject* child)
 		std::cout << "Failed to add Child" << std::endl;
 		return false;
 	}
-	children.push_back(*child);
+	children.push_back(child);
 	return true;
 }
 
 GraphicsObject* GraphicsObject::getChild(std::string id)
 {
-	for (std::vector<GraphicsObject>::iterator i = children.begin(); i < children.end(); ++i){
-		if ((*i).getId() == id)
-			return &(*i);
+	for (std::vector<GraphicsObject*>::iterator i = children.begin(); i < children.end(); ++i){
+		if ((*i)->getId() == id)
+			return (*i);
 	}
 
 	return NULL;
@@ -249,8 +249,8 @@ int GraphicsObject::render(Matrix4f parentMatrix)
 
 void GraphicsObject::renderChildren(Matrix4f base)
 {
-	for (std::vector<GraphicsObject>::iterator i = children.begin(); i < children.end(); ++i){
-		(*i).render(base);
+	for (std::vector<GraphicsObject*>::iterator i = children.begin(); i < children.end(); ++i){
+		(*i)->render(base);
 	}
 }
 

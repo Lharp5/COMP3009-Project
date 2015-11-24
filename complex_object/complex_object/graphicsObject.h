@@ -130,7 +130,7 @@ protected:
 	void renderChildren(Matrix4f base);
 	
 	//heirarchical graphics rendering
-	std::vector<GraphicsObject> children;
+	std::vector<GraphicsObject*> children;
 
 public:
 	void setInitialRotations(float rollAngle, float pitchAngle, float yawAngle);

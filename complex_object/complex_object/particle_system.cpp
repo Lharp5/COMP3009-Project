@@ -76,7 +76,7 @@ int ParticleSystem::createSphere(int numLong, int numLat, Vertices &vtx, Indices
 
 	// fill the index buffer
 	//is this needed?
-	/*k = 0;
+	k = 0;
 	for (i = 0; i < numRows; i++) {
 		for (j = 0; j < numCols; j++) {
 			// fill indices for the quad
@@ -89,7 +89,7 @@ int ParticleSystem::createSphere(int numLong, int numLat, Vertices &vtx, Indices
 			ind[k++] = (i + 1) * (numCols + 1) + j + 1;
 			ind[k++] = (i + 1) * (numCols + 1) + j;
 		}
-	}*/
+	}
 
 	return(0);
 
@@ -148,15 +148,12 @@ int ParticleSystem::createVAO(Shader newShader, Vertices vtx, Indices ind)
 	glEnableVertexAttribArray(location);
 	glVertexAttribPointer(location, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texCoord));
 
-
-	/* NOT NEEDED???!?!?!*/
-	//create particle buffer
-	//glGenBuffers(1, &indVBO);
-	//glBindBuffer(GL_ARRAY_BUFFER, indVBO);
-	//glBufferData(GL_ARRAY_BUFFER, ind.size() * sizeof(GLuint), ind.data(), GL_STATIC_DRAW);
+	//create index buffer
+	glGenBuffers(1, &indVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indVBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, ind.size() * sizeof(GLuint), ind.data(), GL_STATIC_DRAW);
 	// store the number of indices
-	//numIndices = ind.size();
-	numIndices = 0;
+	numIndices = ind.size();
 
 	//end creation
 	glBindVertexArray(0);

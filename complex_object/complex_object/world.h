@@ -17,7 +17,7 @@ public:
 	GraphicsObject* getObject(std::string id);
 	int render();
 private:
-	std::vector<GraphicsObject> objects;
+	std::vector<GraphicsObject*> objects;
 };
 
 
