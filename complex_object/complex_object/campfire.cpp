@@ -33,7 +33,6 @@ void Campfire::setupCampfire(Shader *logShader, Texture* logTexture, Shader *fir
 	log1.setScale(0.125, 0.125, 0.5);
 	addChild(&log1);
 
-	Cylinder::createCylinder(200, vtx, ind, Vector4f(0, 0, 1, 1));
 	log2.setId("log2");
 	log2.setMaterial(logMat);
 	log2.setTexture(*logTexture);
@@ -43,7 +42,6 @@ void Campfire::setupCampfire(Shader *logShader, Texture* logTexture, Shader *fir
 	log2.setScale(0.125, 0.125, 0.5);
 	addChild(&log2);
 
-	Cylinder::createCylinder(200, vtx, ind, Vector4f(0, 0, 1, 1));
 	log3.setId("log3");
 	log3.setMaterial(logMat);
 	log3.setTexture(*logTexture);
@@ -53,7 +51,6 @@ void Campfire::setupCampfire(Shader *logShader, Texture* logTexture, Shader *fir
 	log3.setScale(0.125, 0.125, 0.5);
 	addChild(&log3);
 
-	Cylinder::createCylinder(200, vtx, ind, Vector4f(0, 0, 1, 1));
 	log4.setId("log4");
 	log4.setMaterial(logMat);
 	log4.setTexture(*logTexture);
@@ -76,7 +73,6 @@ void Campfire::setupCampfire(Shader *logShader, Texture* logTexture, Shader *fir
 	fire.setScale(0.15, 0.15, 0.15);
 	fire.setTexture(*fireTexture);
 	addChild(&fire);
-
 
 	//circle of rocks around my campfire
 	setupRocks(rockShader, rockTexture);

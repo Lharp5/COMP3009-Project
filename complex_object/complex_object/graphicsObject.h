@@ -52,7 +52,7 @@ public:
 	GraphicsObject(std::string newId);
 	virtual ~GraphicsObject();
 	int createVAO(Shader shader);
-	int GraphicsObject::createVAO(Shader newShader, Vertices vtx, Indices ind);
+	virtual int GraphicsObject::createVAO(Shader newShader, Vertices vtx, Indices ind);
 	virtual int render();
 	virtual int render(Matrix4f base);
 
