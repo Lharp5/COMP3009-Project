@@ -10,7 +10,7 @@ ParticleSystem::~ParticleSystem()
 
 }
 
-int ParticleSystem::createSphere(int numLong, int numLat, Vertices &vtx, Indices &ind, Vector4f colour)
+int ParticleSystem::createSphere(int numLong, int numLat, Vertices &vtx, Indices &ind)
 
 {
 	int i, j, k;
@@ -22,10 +22,12 @@ int ParticleSystem::createSphere(int numLong, int numLat, Vertices &vtx, Indices
 	Vector4f col;
 	Vector3f norm;
 	Vector2f texCoord;
+	Vector4f colour;
 	float alpha;
 	float beta;
 	float deltaAlpha;
 	float deltaBeta;
+	float randElement;
 
 	Vector4f noColour = (-1, -1, -1, -1);
 
@@ -53,22 +55,23 @@ int ParticleSystem::createSphere(int numLong, int numLat, Vertices &vtx, Indices
 
 	for (i = 0, alpha = -90; i <= numRows; i++, alpha += deltaAlpha) {
 		for (j = 0, beta = 0; j <= numCols; j++, beta += deltaBeta) {
-			pos.x = cos(DegreeToRadians(alpha))*cos(DegreeToRadians(beta));
-			pos.y = cos(DegreeToRadians(alpha))*sin(DegreeToRadians(beta));
-			pos.z = sin(DegreeToRadians(alpha));
+
+			randElement = 0.5 + ((float)rand() / (float)RAND_MAX/ 0.5);
+
+			pos.x = cos(DegreeToRadians(alpha * randElement))*cos(DegreeToRadians(beta * randElement));
+			randElement = ((float)rand() / (RAND_MAX));
+			pos.y = cos(DegreeToRadians(alpha * randElement))*sin(DegreeToRadians(beta * randElement));
+			randElement = ((float)rand() / (RAND_MAX));
+			pos.z = sin(DegreeToRadians(alpha * randElement));
 
 			//spheres normals are just the point - the center, but the center is at 0,0 so we just normalize the point
 			norm = Vector3f(pos.x, pos.y, pos.z);
 			norm.normalize();
 
 			texCoord = Vector2f(j*dTexX, i*dTexY);
-
-			if (colour == noColour){
-				vtx[k] = Vertex(pos, Vector4f(pos, 1.0), norm, texCoord);
-			}
-			else{
-				vtx[k] = Vertex(pos, colour, norm, texCoord);
-			}
+			
+			colour = Vector4f( (float) i+j / (float) numRows+numCols, 0, 0, 1);
+			vtx[k] = Vertex(pos, colour, norm, texCoord);
 
 			k++;
 		}

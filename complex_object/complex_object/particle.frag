@@ -1,82 +1,19 @@
 #version 400
+
+// Attributes passed from the geometry shader
+in vec4 frag_colour;
+in vec2 tex_coord;
+
+// Attributes passed with the material file
 uniform sampler2D texture;
 
-uniform vec4 light_position;
-uniform vec4 light_colour;
 
-uniform vec4 ambient;
-uniform vec4 diffuse;
-uniform vec4 specular;
-uniform float shine;
-
-uniform float ambientOn;
-uniform float diffuseOn;
-uniform float specularOn;
-
-
-in Data{
-	vec4 color;
-	vec3 norm_interp;
-	vec3 pos_interp;
-	vec2 texCoord;
-}In;
-
-out vec4 color;
-
-void calculate_light(in vec3 light_pos, inout float Id, inout float Is)
+void main (void)
 {
-
-	// Phong shading
-
-	vec3 N; // Interpolated normal for fragment
-	vec3 L; // Light-source direction
-	vec3 V; // View direction
-	vec3 R; // Refelction Vector
-
-
-	//calculating normal
-    N = normalize(In.norm_interp);
-
-	//light position
-	L = (light_pos - In.pos_interp);
-	L = normalize(L);
-
-	//diffuse lighting
-	Id += max(dot(N, L), 0.0);
-	
-	//Specular component
-	V = - In.pos_interp; // Eye position is (0, 0, 0) in view coordinates
-    V = normalize(V);
-
-	//reflection vector
-    R = -L + 2 *dot(L, N) * N; // reflection vector
-    R = normalize(R);
-
-	//spec_angle_cos
-    float spec_angle_cos = max(dot(V, R), 0.0);
-	
-	//specular lighting
-	Is += pow(spec_angle_cos, shine);
-}
-
-void main()
-{
-	float Id = 0;
-	float Is = 0;
-	vec4 colour_val = vec4(0,0,0,1);
-
-	calculate_light(light_position.xyz, Id, Is);
-	// output the colour
-	if(ambientOn == 1.0){
-		colour_val += texture2D(texture, In.texCoord) * ambient;
-		//colour_val += In.color * ambient;
-	}
-	if(diffuseOn == 1.0){
-		//colour_val += In.color * diffuse*Id * light_colour;
-		colour_val += texture2D(texture, In.texCoord) * diffuse*Id * light_colour;
-	}
-	if(specularOn == 1.0){
-		colour_val +=  specular*Is * light_colour;  //is this needed?
-	}
-	color = colour_val;
+	vec3 object_colour = vec3(0.612, 0.165, 0);
+	// Get pixel from texture
+	vec4 outval = texture2D(texture, tex_coord);
+	// Adjust specified object colour according to the grayscale texture value
+    outval = vec4(outval.r*object_colour.r, outval.g*object_colour.g, outval.b*object_colour.b, sqrt(sqrt(outval.r))*frag_colour.a);
+	gl_FragColor = outval;
 }

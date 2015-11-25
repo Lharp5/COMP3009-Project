@@ -2,7 +2,7 @@
 
 uniform mat4 model; 
 uniform mat4 view; 
-uniform mat4 projection;
+
 
 uniform float timer;
 
@@ -11,42 +11,40 @@ in vec4 vtxCol;
 in vec3 vtxNorm;
 in vec2 texCoord;
 
-out Data{
-	vec4 color;
-	vec3 norm_interp;
-	vec3 pos_interp;
-	vec2 texCoord;
-} Out;
+out vec4 particle_colour;
+out float particle_id;
+
+// Define some useful constants
+const float pi = 3.1415926536;
+const float pi_over_two = 1.5707963268;
+const float two_pi = 2.0*pi;
 
 void main(){
 	
-	vec4 upVector = view * model * vec4(0,1,0,1); //world up vector
+	vec4 upVector = model * vec4(0,1,0,1); //world up vector
 	vec4 pos = model * vec4(vtxPos, 1.0);
 	vec4 norm =  transpose(inverse(view * model)) * vec4(vtxNorm, 1.0);
+	
+	particle_id = vtxCol.r;
 
-	// Let time cycle every four seconds
-	float circtime = timer - 4.0 * floor(timer / 4);
-	float t = circtime; // Our time parameter
+	// Define time in a cyclic manner
+    float phase = two_pi*particle_id; // Start the sin wave later depending on the particle_id
+	float param = timer / 5.0 + phase; // The constant that divides "timer" adjusts the "speed" of the fire
+	float rem = mod(param, pi_over_two); // Use the remainder of dividing by pi/2 so that we are always in the range [0..pi/2] where sin() gives values in [0..1]
+	float circtime = sin(rem); // Get time value in [0..1], according to a sinusoidal wave
 	
-	// Settings for the explosion
-	// Could also define these in the material file to have multiple particle systems with different settings
-    float grav = 0.005; // Gravity
-    float slow = 0.6; // Allows to slow down the explosion, control the speed of the explosion
-	
-    // Move point along normal and down with t*t (acceleration under gravity)
-    pos.x += norm.x*t*slow - grav*slow*upVector.x*t*t;
-    pos.y += norm.y*t*slow - grav*slow*upVector.y*t*t;
-    pos.z += norm.z*t*slow - grav*slow*upVector.z*t*t;
+	// Set up parameters of the particle motion
+    float t = abs(circtime)*(0.3 + abs(norm.y)); // Our time parameter
+    float accel = 1.2; // An acceleration applied to the particles coming from some attraction force
+    float slow = 0.98; // Allows us to slow down the motion, control its speed
+
+    pos += slow*upVector*accel*t*t; // Particle moves up
 
 	// transform the vertex position
 	pos = view * pos;
-	gl_Position = projection * pos;
+	gl_Position = pos;	
 
-	Out.pos_interp = pos.xyz;
-	Out.norm_interp =  norm.xyz;
-
-	//setting the material components
-	// set the colour
-	Out.color = vtxCol;
-	Out.texCoord = texCoord;
+	// Define amount of blending depending on the cyclic time    
+	float alpha = 1.0 - circtime*circtime;
+	particle_colour = vec4(1.0, 1.0, 1.0, alpha);
 }

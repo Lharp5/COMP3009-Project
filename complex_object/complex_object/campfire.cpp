@@ -66,7 +66,7 @@ void Campfire::setupCampfire(Shader *logShader, Texture* logTexture, Shader *fir
 
 	//TODO replace with particle effect
 	ParticleSystem *fire = new ParticleSystem();
-	ParticleSystem::createSphere(60, 30, vtx, ind, Vector4f(1, 0, 0, 1));
+	ParticleSystem::createSphere(60, 30, vtx, ind);
 	//Sphere *fire = new Sphere();
 	//Sphere::createSphere(200, 100, vtx, ind, Vector4f(1, 0, 0, 1));
 
@@ -76,7 +76,7 @@ void Campfire::setupCampfire(Shader *logShader, Texture* logTexture, Shader *fir
 	fire->setMaterial(fireMat);
 	fire->createVAO(*fireShader, vtx, ind);
 	fire->setInitialPosition(0, 0, 0);
-	fire->setInitialRotations(0, 90, 0);
+	fire->setInitialRotations(0, 0, 0);
 	fire->setScale(0.15, 0.15, 0.15);
 	fire->setTexture(*fireTexture);
 	addChild(fire);

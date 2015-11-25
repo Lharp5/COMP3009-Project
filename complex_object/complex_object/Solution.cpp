@@ -60,6 +60,7 @@ Solution::~Solution()
 // initializing the opengl functions and windows
 int Solution::initOpenGL()
 {
+	srand(time(0));
 	//initialize OpenGL
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowPosition(0, 0);
@@ -190,7 +191,8 @@ int Solution::initSolution()
 	material.setSpecular(Vector4f(0.2, 0.2, 0.2, 1));
 
 	// create the shader object
-	rc = shader.createShaderProgram("particle.vert", "particle.frag");
+	rc = shader.createShaderProgram("particle.vert", "particle.frag", "particle.geom");
+	//rc = shader.createShaderProgram("particle.vert", "particle.frag");
 	if (rc != 0) {
 		fprintf(stderr, "Error in generating shader (solution)\n");
 		rc = -1; 
