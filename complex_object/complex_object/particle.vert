@@ -1,4 +1,4 @@
-#version 400
+#version 400 core
 
 uniform mat4 model; 
 uniform mat4 view; 

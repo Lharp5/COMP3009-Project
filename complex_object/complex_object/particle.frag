@@ -1,4 +1,4 @@
-#version 400
+#version 400 core
 
 // Attributes passed from the geometry shader
 in vec4 frag_colour;

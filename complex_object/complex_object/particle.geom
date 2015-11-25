@@ -1,8 +1,10 @@
-#version 400
+#version 400 core
 
 // Definition of the geometry shader
+//layout (triangles) in;
 layout (points) in;
-layout (triangle_strip, max_vertices = 4) out;
+layout (triangle_strip) out;
+layout (max_vertices = 4) out;
 
 // Attributes passed from the vertex shader
 in vec4 particle_colour[];

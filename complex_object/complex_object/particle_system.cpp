@@ -157,6 +157,8 @@ int ParticleSystem::createVAO(Shader newShader, Vertices vtx, Indices ind)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, ind.size() * sizeof(GLuint), ind.data(), GL_STATIC_DRAW);
 	// store the number of indices
 	numIndices = vtx.size();
+	//numIndices = ind.size();
+
 
 	//end creation
 	glBindVertexArray(0);
@@ -221,3 +223,8 @@ int ParticleSystem::render(Matrix4f parentMatrix)
 
 	return 0;
 }
+
+/*int ParticleSystem::render(Matrix4f parentMatrix)
+{
+	return GraphicsObject::render(parentMatrix);
+}*/
