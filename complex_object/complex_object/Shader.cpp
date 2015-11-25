@@ -183,14 +183,6 @@ GLint Shader::ceateShaderProgram(GLint vertShaderid, GLint fragShaderid, GLint g
 		goto err;
 	}
 
-	glAttachShader(shaderProgramid, fragShaderid);
-	rc = glGetError();
-	if (rc != GL_NO_ERROR) {
-		fprintf(stderr, "error in attach shaders \n");
-		rc = -1;
-		goto err;
-	}
-
 	if (geoShaderid != -1){
 		glAttachShader(shaderProgramid, geoShaderid);
 		rc = glGetError();
@@ -200,6 +192,15 @@ GLint Shader::ceateShaderProgram(GLint vertShaderid, GLint fragShaderid, GLint g
 			goto err;
 		}
 	}
+
+	glAttachShader(shaderProgramid, fragShaderid);
+	rc = glGetError();
+	if (rc != GL_NO_ERROR) {
+		fprintf(stderr, "error in attach shaders \n");
+		rc = -1;
+		goto err;
+	}
+
 	glLinkProgram(shaderProgramid);
 
 	// check for errors
