@@ -192,7 +192,7 @@ int Solution::initSolution()
 
 	// create the shader object
 	rc = shader.createShaderProgram("particle.vert", "particle.frag", "particle.geom");
-	//rc = shader.createShaderProgram("particle.vert", "particle.frag");
+	//rc = shader.createShaderProgram("phong.vert", "phong.frag");
 	if (rc != 0) {
 		fprintf(stderr, "Error in generating shader (solution)\n");
 		rc = -1; 
@@ -221,7 +221,7 @@ int Solution::initSolution()
 	}
 
 	texture.loadTextures("tree_bark_long.jpg", GL_TEXTURE_2D, GL_TEXTURE1);
-	fireTexture.loadTextures("fire_temp.jpg", GL_TEXTURE_2D, GL_TEXTURE2);
+	fireTexture.loadTextures("flame_particle.png", GL_TEXTURE_2D, GL_TEXTURE2);
 	grassTexture.loadTextures("grass_texture3.jpg", GL_TEXTURE_2D, GL_TEXTURE3);
 	rockTexture.loadTextures("rock_texture.jpg", GL_TEXTURE_2D, GL_TEXTURE4);
 
