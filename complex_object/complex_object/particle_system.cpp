@@ -156,7 +156,7 @@ int ParticleSystem::createVAO(Shader newShader, Vertices vtx, Indices ind)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indVBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, ind.size() * sizeof(GLuint), ind.data(), GL_STATIC_DRAW);
 	// store the number of indices
-	numIndices = ind.size();
+	numIndices = vtx.size();
 
 	//end creation
 	glBindVertexArray(0);
@@ -165,11 +165,59 @@ err:
 	return(rc);
 }
 
-int ParticleSystem::render(Matrix4f base)
+int ParticleSystem::render(Matrix4f parentMatrix)
 {
-	int ret = -1;
-	glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-	ret = GraphicsObject::render(base);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	return ret;
+	Matrix4f rotMat;  // rotation matrix;
+	Matrix4f scaleMat; // scaling matrix;
+	Matrix4f transMat;	// translation matrix
+	Matrix4f modelMat;	// final model matrix
+
+	// set the transformation matrix - the model transfomration
+	modelMat = Matrix4f::identity();
+
+	// set the scaling - this is model space to model space transformation
+	scaleMat = Matrix4f::scale(scale.x, scale.y, scale.z);
+	modelMat = scaleMat * modelMat;
+
+	// set the rotation  - this is model space to model space transformation 
+	rotMat = Matrix4f::rotateRollPitchYaw(rollAngle, pitchAngle, yawAngle, 1);
+	// note that we always multiply the new matrix on the left
+	modelMat = rotMat * modelMat;
+
+	// set the translation - this is model space to world space transformation
+	transMat = Matrix4f::translation(position);
+	modelMat = transMat * modelMat;
+
+
+	//applying parent transformation
+	modelMat = parentMatrix * modelMat;
+
+	// move matrix to shader
+	shader.useProgram(1);
+	shader.copyMatrixToShader(modelMat, "model");
+
+
+	// bind the vao
+	glBindVertexArray(vao);
+
+	// draw using indices
+	glDrawArrays(GL_POINTS, 0, numIndices);
+
+	// unbind the vao
+	glBindVertexArray(0);
+
+	//passing in the material information
+	if (materialUsed){
+		material.render(shader);
+	}
+
+	//passing the texture sample information
+	if (textureUsed){
+		texture.bindToTextureUnit();
+		texture.setTextureSampler(shader, "texture");
+	}
+
+	renderChildren(modelMat);
+
+	return 0;
 }
