@@ -261,7 +261,7 @@ int Shader::createShaderProgram(char * vsFileName, char * fsFileName, char* gsFi
 		rc = createShaderObj(fsFileName, GL_FRAGMENT_SHADER, &fragShaderid);
 	}
 	if (rc == 0 && gsFileName != "_NOT_INCLUDED_"){
-		rc = createShaderObj(fsFileName, GL_GEOMETRY_SHADER, &geoShaderid);
+		rc = createShaderObj(gsFileName, GL_GEOMETRY_SHADER, &geoShaderid);
 	}
 
 	if (rc == 0) {
