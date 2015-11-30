@@ -52,7 +52,7 @@ public:
 	GraphicsObject(std::string newId);
 	virtual ~GraphicsObject();
 	int createVAO(Shader shader);
-	int GraphicsObject::createVAO(Shader newShader, Vertices vtx, Indices ind);
+	virtual int GraphicsObject::createVAO(Shader newShader, Vertices vtx, Indices ind);
 	virtual int render();
 	virtual int render(Matrix4f base);
 
@@ -130,7 +130,7 @@ protected:
 	void renderChildren(Matrix4f base);
 	
 	//heirarchical graphics rendering
-	std::vector<GraphicsObject> children;
+	std::vector<GraphicsObject*> children;
 
 public:
 	void setInitialRotations(float rollAngle, float pitchAngle, float yawAngle);

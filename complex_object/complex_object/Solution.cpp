@@ -60,6 +60,7 @@ Solution::~Solution()
 // initializing the opengl functions and windows
 int Solution::initOpenGL()
 {
+	srand(time(0));
 	//initialize OpenGL
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowPosition(0, 0);
@@ -181,16 +182,17 @@ int Solution::initSolution()
 	Indices ind;
 
 	//fancy object
-	Surface surface;
+	Surface* surface  = new Surface();
 	Texture texture, fireTexture, grassTexture, rockTexture;
 	Material material;
-	Campfire campfire;
+	Campfire* campfire = new Campfire();
 
 	material.setShine(10);
 	material.setSpecular(Vector4f(0.2, 0.2, 0.2, 1));
 
 	// create the shader object
-	rc = shader.createShaderProgram("phong.vert", "phong.frag");
+	rc = shader.createShaderProgram("particle.vert", "particle.frag", "particle.geom");
+	//rc = shader.createShaderProgram("phong.vert", "phong.frag");
 	if (rc != 0) {
 		fprintf(stderr, "Error in generating shader (solution)\n");
 		rc = -1; 
@@ -219,26 +221,26 @@ int Solution::initSolution()
 	}
 
 	texture.loadTextures("tree_bark_long.jpg", GL_TEXTURE_2D, GL_TEXTURE1);
-	fireTexture.loadTextures("fire_temp.jpg", GL_TEXTURE_2D, GL_TEXTURE2);
+	fireTexture.loadTextures("flame_particle.png", GL_TEXTURE_2D, GL_TEXTURE2);
 	grassTexture.loadTextures("grass_texture3.jpg", GL_TEXTURE_2D, GL_TEXTURE3);
 	rockTexture.loadTextures("rock_texture.jpg", GL_TEXTURE_2D, GL_TEXTURE4);
 
-	campfire.setupCampfire(&phongShader, &texture, &shader, &fireTexture, &rockShader, &rockTexture);
-	campfire.setId("campfire");
-	campfire.setInitialPosition(0, 0, 0);
-	campfire.setInitialRotations(0, 0, 0);
-	campfire.setScale(1, 1, 1);
-	world.addObject(&campfire);
+	campfire->setupCampfire(&phongShader, &texture, &shader, &fireTexture, &rockShader, &rockTexture);
+	campfire->setId("campfire");
+	campfire->setInitialPosition(0, 0, 0);
+	campfire->setInitialRotations(0, 0, 0);
+	campfire->setScale(1, 1, 1);
+	world.addObject(campfire);
 
 	Surface::createSurface(6, 3, 100, 100, vtx, ind);
-	surface.createVAO(surfaceShader, vtx, ind);
-	surface.setId("grass");
-	surface.setTexture(grassTexture);
-	surface.setMaterial(material);
-	surface.setInitialPosition(0, -0.3, 0);
-	surface.setInitialRotations(0, 180, 0);
-	surface.setScale(10, 10, 10);
-	world.addObject(&surface);
+	surface->createVAO(surfaceShader, vtx, ind);
+	surface->setId("grass");
+	surface->setTexture(grassTexture);
+	surface->setMaterial(material);
+	surface->setInitialPosition(0, -0.3, 0);
+	surface->setInitialRotations(0, 180, 0);
+	surface->setScale(10, 10, 10);
+	world.addObject(surface);
 	
 
 	err:
@@ -273,7 +275,7 @@ void Solution::render()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_POINTS);
 
 	// move matrix to shader
 	//shader.copyMatrixToShader(viewMat, "view");
@@ -450,8 +452,10 @@ void Solution::winResize(int width, int height)
 
 int Solution::updateObjects(int numFrames)
 {
-	// recall that this will be carried out in the model space
-	Sphere* spherePtr = (Sphere*) world.getObject("ball1");
+	float timer = numFrames * 0.05;
+	
+	shader.useProgram(1);
+	shader.copyFloatToShader(timer, "timer");
 
 	glutPostRedisplay();
 	return 0;

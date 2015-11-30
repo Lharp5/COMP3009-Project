@@ -5,6 +5,7 @@
 #include "cylinder.h"
 #include "sphere.h"
 #include <math.h>
+#include "particle_system.h"
 class Campfire: public GraphicsObject{
 public:
 	Campfire();

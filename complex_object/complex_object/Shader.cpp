@@ -40,7 +40,7 @@
 /******************************************************************************/
 // Constructor
 
-Shader::Shader(void) : shaderProgramid(-1), vertShaderid(-1), fragShaderid(-1)
+Shader::Shader(void) : shaderProgramid(-1), vertShaderid(-1), fragShaderid(-1), geoShaderid(-1)
 {
 
 }
@@ -168,7 +168,7 @@ return:
 -1 if error
 */
 
-GLint Shader::ceateShaderProgram(GLint vertShaderid, GLint fragShaderid, GLuint *shaderProgId)
+GLint Shader::ceateShaderProgram(GLint vertShaderid, GLint fragShaderid, GLint geoShaderid, GLuint *shaderProgId)
 {
 
 	int rc = 0;
@@ -181,6 +181,16 @@ GLint Shader::ceateShaderProgram(GLint vertShaderid, GLint fragShaderid, GLuint 
 		fprintf(stderr, "error in attach shaders \n");
 		rc = -1;
 		goto err;
+	}
+
+	if (geoShaderid != -1){
+		glAttachShader(shaderProgramid, geoShaderid);
+		rc = glGetError();
+		if (rc != GL_NO_ERROR) {
+			fprintf(stderr, "error in attach shaders \n");
+			rc = -1;
+			goto err;
+		}
 	}
 
 	glAttachShader(shaderProgramid, fragShaderid);
@@ -241,7 +251,7 @@ return:
 */
 
 
-int Shader::createShaderProgram(char * vsFileName, char * fsFileName)
+int Shader::createShaderProgram(char * vsFileName, char * fsFileName, char* gsFileName)
 {
 
 	int rc = 0;
@@ -250,8 +260,12 @@ int Shader::createShaderProgram(char * vsFileName, char * fsFileName)
 	if (rc == 0) {
 		rc = createShaderObj(fsFileName, GL_FRAGMENT_SHADER, &fragShaderid);
 	}
+	if (rc == 0 && gsFileName != "_NOT_INCLUDED_"){
+		rc = createShaderObj(gsFileName, GL_GEOMETRY_SHADER, &geoShaderid);
+	}
+
 	if (rc == 0) {
-		rc = ceateShaderProgram(vertShaderid, fragShaderid, &shaderProgramid);
+		rc = ceateShaderProgram(vertShaderid, fragShaderid, geoShaderid, &shaderProgramid);
 	}
 
 	return(rc);
@@ -290,7 +304,7 @@ int Shader::createShaderProgram(char * vsFileName, char * fsFileName, GLuint *sh
 		rc = createShaderObj(fsFileName, GL_FRAGMENT_SHADER, &fragShaderid);
 	}
 	if (rc == 0) {
-		rc = ceateShaderProgram(vertShaderid, fragShaderid, shaderProgramid);
+		rc = ceateShaderProgram(vertShaderid, fragShaderid, -1, shaderProgramid);
 	}
 
 	return(rc);

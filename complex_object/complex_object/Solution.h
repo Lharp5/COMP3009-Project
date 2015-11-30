@@ -47,6 +47,7 @@
 #include "camera.h"
 #include "campfire.h"
 #include "Surface.h"
+#include <time.h>
 
 
 
