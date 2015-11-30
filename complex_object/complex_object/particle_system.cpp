@@ -10,88 +10,107 @@ ParticleSystem::~ParticleSystem()
 
 }
 
-int ParticleSystem::createSphere(int numLong, int numLat, Vertices &vtx, Indices &ind)
+int ParticleSystem::createSphere(int numParticles, float maxspray, Vertices &vtx, Indices &ind)
 
 {
-	int i, j, k;
-	int numRows;
-	int numCols;
-	int numVtx;
-	int numTriangles;
+	int i;
 	Vector3f pos;
-	Vector4f col;
 	Vector3f norm;
 	Vector2f texCoord;
 	Vector4f colour;
-	float alpha;
-	float beta;
-	float deltaAlpha;
-	float deltaBeta;
-	float randElement;
+	Vector3f wander;
 
-	Vector4f noColour = (-1, -1, -1, -1);
-
-	numRows = numLat * 2;  // number of horizonal slabs
-	numCols = numLong;	// number of vertical slabs
-
-	numVtx = (numRows + 1) * (numCols + 1);
-	vtx.resize(numVtx);
+	vtx.resize(numParticles);
 	std::cout << "   the vector's size is: " << vtx.size() << std::endl;
 	std::cout << "   the vector's capacity is: " << vtx.capacity() << std::endl;
 	std::cout << "   the vector's maximum size is: " << vtx.max_size() << std::endl;
 
+	ind.resize(0);
 
-	numTriangles = numRows * numCols * 2;
-	ind.resize(numTriangles * 3);
+	srand(time(0));
+	float trad = 0.4; // Defines the starting point of the particles
+	/* Create a set of points which will be the particles */
+	/* This is similar to drawing a torus: we will sample points on the surface of the torus */
 
-	// Fill the vertex buffer with positions
-	k = 0;
-	alpha = 0.0f;  // angle of latitude starting from the "south pole"
-	deltaAlpha = (float)90.0 / numLat; // increment of alpha
-	beta = 0;   // angle of the longtidute 
-	deltaBeta = (float)360.0 / (numLong);	// increment of beta
-	float dTexX = 1.0 / numCols;
-	float dTexY = 1.0 / numRows;
-
-	for (i = 0, alpha = -90; i <= numRows; i++, alpha += deltaAlpha) {
-		for (j = 0, beta = 0; j <= numCols; j++, beta += deltaBeta) {
-
-			randElement = 0.5 + ((float)rand() / (float)RAND_MAX/ 0.5);
-
-			pos.x = cos(DegreeToRadians(alpha * randElement))*cos(DegreeToRadians(beta * randElement));
-			randElement = ((float)rand() / (RAND_MAX));
-			pos.y = cos(DegreeToRadians(alpha * randElement))*sin(DegreeToRadians(beta * randElement));
-			randElement = ((float)rand() / (RAND_MAX));
-			pos.z = sin(DegreeToRadians(alpha * randElement));
-
-			//spheres normals are just the point - the center, but the center is at 0,0 so we just normalize the point
-			norm = Vector3f(pos.x, pos.y, pos.z);
-			norm.normalize();
-
-			texCoord = Vector2f(j*dTexX, i*dTexY);
+	float u, v, w, theta, phi, spray; // Work variables
+	for (int i = 0; i < numParticles; i++){
 			
-			colour = Vector4f( (float) i+j / (float) numRows+numCols, 0, 0, 1);
-			vtx[k] = Vertex(pos, colour, norm, texCoord);
+		// Randomly select two numbers to define a point on the torus
+		u = ((double) rand() / (RAND_MAX));
+        v = ((double) rand() / (RAND_MAX));
+            
+		// Use u and v to define the point on the torus
+        theta = u * 2.0f*M_PI;
+		phi = v * 2.0f*M_PI;
+        norm = Vector3f(cos(theta)*cos(phi), sin(theta)*cos(phi), sin(phi));
 
-			k++;
-		}
+		pos = Vector3f(norm.x*trad, norm.y*trad, norm.z*trad);
+		colour = Vector4f(((float)i) / ((float)numParticles), 0.0f, 1.0f - (((float)i) / ((float)numParticles)), 1.0f);
+		texCoord = Vector2f(0, 0); //not used for particels
+		// Now sample a point on a sphere to define a direction for points to wander around
+		u = ((double) rand() / (RAND_MAX));
+        v = ((double) rand() / (RAND_MAX));
+		w = ((double) rand() / (RAND_MAX));
+			
+		theta = u * 2*M_PI;
+		phi = acos(2.0*v * -1.0);
+		spray = maxspray*pow((float) w, (float) (1.0/3.0)); // Cubic root
+		wander = Vector3f(spray*sin(theta)*sin(phi), spray*cos(theta)*sin(phi), spray*cos(phi));
+
+		norm = wander;
+		vtx[i] = Vertex(pos, colour, norm, texCoord);
 	}
 
-	// fill the index buffer
-	//is this needed?
-	k = 0;
-	for (i = 0; i < numRows; i++) {
-		for (j = 0; j < numCols; j++) {
-			// fill indices for the quad
-			// change by making a quad function
-			ind[k++] = i * (numCols + 1) + j;
-			ind[k++] = i * (numCols + 1) + j + 1;
-			ind[k++] = (i + 1) * (numCols + 1) + j + 1;
+	return(0);
 
-			ind[k++] = i * (numCols + 1) + j;
-			ind[k++] = (i + 1) * (numCols + 1) + j + 1;
-			ind[k++] = (i + 1) * (numCols + 1) + j;
-		}
+}
+
+int ParticleSystem::createCone(int numParticles, float maxspray, Vertices &vtx, Indices &ind)
+
+{
+	int i;
+	Vector3f pos;
+	Vector3f norm;
+	Vector2f texCoord;
+	Vector4f colour;
+	Vector3f wander;
+
+	vtx.resize(numParticles);
+	std::cout << "   the vector's size is: " << vtx.size() << std::endl;
+	std::cout << "   the vector's capacity is: " << vtx.capacity() << std::endl;
+	std::cout << "   the vector's maximum size is: " << vtx.max_size() << std::endl;
+
+	ind.resize(0);
+
+	srand(time(0));
+	/* Create a set of points which will be the particles */
+	/* This is similar to drawing a torus: we will sample points on the surface of the torus */
+	float u, v, w, theta, phi, spray; // Work variables
+	for (int i = 0; i < numParticles; i++){
+
+		// Randomly select two numbers to define a point on the torus
+		u = ((double)rand() / (RAND_MAX));
+		v = ((double)rand() / (RAND_MAX));
+
+		//Angle we are going to use for our base
+		theta = u * 2.0f*M_PI;
+		phi = v * 2.0f*M_PI;
+
+		pos = Vector3f((1 - (v / 1.0))* cos(theta), v, (1 - (v / 1.0)) * sin(theta));
+		colour = Vector4f(((float)i) / ((float)numParticles), 0.0f, 1.0f - (((float)i) / ((float)numParticles)), 1.0f);
+		texCoord = Vector2f(0, 0); //not used for particels
+		// Now sample a point on a sphere to define a direction for points to wander around
+		u = ((double)rand() / (RAND_MAX));
+		v = ((double)rand() / (RAND_MAX));
+		w = ((double)rand() / (RAND_MAX));
+
+		theta = u * 2 * M_PI;
+		phi = acos(2.0*v * -1.0);
+		spray = maxspray*pow((float)w, (float)(1.0 / 3.0)); // Cubic root
+		wander = Vector3f(spray*sin(theta)*sin(phi), spray*cos(theta)*sin(phi), spray*cos(phi));
+
+		norm = wander;
+		vtx[i] = Vertex(pos, colour, norm, texCoord);
 	}
 
 	return(0);
@@ -167,32 +186,17 @@ err:
 	return(rc);
 }
 
-int ParticleSystem::render(Matrix4f parentMatrix)
+int ParticleSystem::render()
 {
-	Matrix4f rotMat;  // rotation matrix;
-	Matrix4f scaleMat; // scaling matrix;
-	Matrix4f transMat;	// translation matrix
 	Matrix4f modelMat;	// final model matrix
 
-	// set the transformation matrix - the model transfomration
-	modelMat = Matrix4f::identity();
-
-	// set the scaling - this is model space to model space transformation
-	scaleMat = Matrix4f::scale(scale.x, scale.y, scale.z);
-	modelMat = scaleMat * modelMat;
-
-	// set the rotation  - this is model space to model space transformation 
-	rotMat = Matrix4f::rotateRollPitchYaw(rollAngle, pitchAngle, yawAngle, 1);
-	// note that we always multiply the new matrix on the left
-	modelMat = rotMat * modelMat;
-
-	// set the translation - this is model space to world space transformation
-	transMat = Matrix4f::translation(position);
-	modelMat = transMat * modelMat;
+	glDepthMask(GL_FALSE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_ONE);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-	//applying parent transformation
-	modelMat = parentMatrix * modelMat;
+	modelMat = getTransformationMatrix();
 
 	// move matrix to shader
 	shader.useProgram(1);
@@ -220,11 +224,7 @@ int ParticleSystem::render(Matrix4f parentMatrix)
 	}
 
 	renderChildren(modelMat);
-
+	glDisable(GL_BLEND);
+	glDepthMask(GL_TRUE);
 	return 0;
 }
-
-/*int ParticleSystem::render(Matrix4f parentMatrix)
-{
-	return GraphicsObject::render(parentMatrix);
-}*/

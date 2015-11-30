@@ -169,9 +169,9 @@ int Solution::timer(int operation)
 int Solution::initSolution()
 {
 	//initialize the camera.
-	Vector3f viewerPosition = Vector3f(0, 1, 5);
+	Vector3f viewerPosition = Vector3f(0, 0.25, 4);
 	//Vector3f viewerPosition = Vector3f(0, 0, 5);
-	Vector3f lookAtPoint = Vector3f(0, 1, 0);
+	Vector3f lookAtPoint = Vector3f(0, 0.25, 0);
 	//Vector3f lookAtPoint = Vector3f(0, 0, 0);
 	Vector3f upVector = Vector3f(0, 1, 0);
 
@@ -184,7 +184,7 @@ int Solution::initSolution()
 	//fancy object
 	Surface* surface  = new Surface();
 	Texture texture, fireTexture, grassTexture, rockTexture;
-	Material material;
+	Material material, fireMat;
 	Campfire* campfire = new Campfire();
 
 	material.setShine(10);
@@ -219,13 +219,45 @@ int Solution::initSolution()
 		rc = -1;
 		goto err;
 	}
+	
+	/*rc = rockShader.createShaderProgram("phong.vert", "phong.frag");
+	if (rc != 0) {
+		fprintf(stderr, "Error in generating shader (solution)\n");
+		rc = -1;
+		goto err;
+	}
+	
+	rc = rockShader.createShaderProgram("phong.vert", "phong.frag");
+	if (rc != 0) {
+		fprintf(stderr, "Error in generating shader (solution)\n");
+		rc = -1;
+		goto err;
+	}*/
 
 	texture.loadTextures("tree_bark_long.jpg", GL_TEXTURE_2D, GL_TEXTURE1);
 	fireTexture.loadTextures("flame_particle.png", GL_TEXTURE_2D, GL_TEXTURE2);
 	grassTexture.loadTextures("grass_texture3.jpg", GL_TEXTURE_2D, GL_TEXTURE3);
 	rockTexture.loadTextures("rock_texture.jpg", GL_TEXTURE_2D, GL_TEXTURE4);
 
-	campfire->setupCampfire(&phongShader, &texture, &shader, &fireTexture, &rockShader, &rockTexture);
+	//TODO replace with particle effect
+	ParticleSystem *fire = new ParticleSystem();
+	ParticleSystem::createCone(60000, 1, vtx, ind);
+	//Sphere *fire = new Sphere();
+	//Sphere::createSphere(200, 100, vtx, ind, Vector4f(1, 0, 0, 1));
+
+	fireMat.setAmbient(Vector4f(1, 1, 1, 1));
+
+	fire->setId("fire");
+	fire->setMaterial(fireMat);
+	fire->createVAO(shader, vtx, ind);
+	fire->setInitialPosition(0,-0.5, 0);
+	fire->setInitialRotations(0, 0, 0);
+	fire->setScale(0.45, 0.5, 0.45);
+	fire->setTexture(fireTexture);
+
+	world.addEffect(fire);
+
+	campfire->setupCampfire(&phongShader, &texture, &rockShader, &rockTexture, fire);
 	campfire->setId("campfire");
 	campfire->setInitialPosition(0, 0, 0);
 	campfire->setInitialRotations(0, 0, 0);
@@ -242,6 +274,12 @@ int Solution::initSolution()
 	surface->setScale(10, 10, 10);
 	world.addObject(surface);
 	
+	world.addShader(&phongShader);
+	world.addShader(&shader);
+	world.addShader(&rockShader);
+	world.addShader(&surfaceShader);
+
+	world.setLight(Vector3f(0, 0, 0), Vector4f(0.612, 0.165, 0, 1.0));
 
 	err:
 	return 0;
@@ -264,9 +302,6 @@ void Solution::setSolution(Solution * _sol)
 
 void Solution::render()
 {
-
-	Vector4f lightPos;
-	Vector4f lightColour = Vector4f(0.612, 0.165, 0, 1.0);
 	Matrix4f projMat;	
 
 	// use the created shader
@@ -278,61 +313,12 @@ void Solution::render()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_POINTS);
 
 	// move matrix to shader
-	//shader.copyMatrixToShader(viewMat, "view");
 	
-	lightPos = camera.getViewMatrix() * Vector4f(0, 0, 0, 1);
 
 	// set the projection matrix
 	projMat = Matrix4f::symmetricPerspectiveProjectionMatrix(30, 2, .1, 1000);
-	// move matrix to shader
-	shader.useProgram(1);
-	shader.copyMatrixToShader(camera.getViewMatrix(), "view");
-	shader.copyMatrixToShader(projMat, "projection");
-
-	shader.copyFloatToShader(ambientOn, "ambientOn");
-	shader.copyFloatToShader(diffuseOn, "diffuseOn");
-	shader.copyFloatToShader(specularOn, "specularOn");
-
-	shader.copyVectorToShader(lightPos, "light_position");
-	shader.copyVectorToShader(lightColour, "light_colour");
-
-
-	surfaceShader.useProgram(1);
-	surfaceShader.copyMatrixToShader(camera.getViewMatrix(), "view");
-	surfaceShader.copyMatrixToShader(projMat, "projection");
-
-	surfaceShader.copyFloatToShader(ambientOn, "ambientOn");
-	surfaceShader.copyFloatToShader(diffuseOn, "diffuseOn");
-	surfaceShader.copyFloatToShader(specularOn, "specularOn");
-
-	surfaceShader.copyVectorToShader(lightPos, "light_position");
-	surfaceShader.copyVectorToShader(lightColour, "light_colour");
-
-	rockShader.useProgram(1);
-	rockShader.copyMatrixToShader(camera.getViewMatrix(), "view");
-	rockShader.copyMatrixToShader(projMat, "projection");
-
-	rockShader.copyFloatToShader(ambientOn, "ambientOn");
-	rockShader.copyFloatToShader(diffuseOn, "diffuseOn");
-	rockShader.copyFloatToShader(specularOn, "specularOn");
-
-	rockShader.copyVectorToShader(lightPos, "light_position");
-	rockShader.copyVectorToShader(lightColour, "light_colour");
-	
-	//phong shader
-
-	phongShader.useProgram(1);
-	phongShader.copyMatrixToShader(camera.getViewMatrix(), "view");
-	phongShader.copyMatrixToShader(projMat, "projection");
-
-	phongShader.copyFloatToShader(ambientOn, "ambientOn");
-	phongShader.copyFloatToShader(diffuseOn, "diffuseOn");
-	phongShader.copyFloatToShader(specularOn, "specularOn");
-
-	phongShader.copyVectorToShader(lightPos, "light_position");
-	phongShader.copyVectorToShader(lightColour, "light_colour");
 	// render the objects
-	world.render();
+	world.render(projMat, camera.getViewMatrix());
 	glutSwapBuffers();
 }
 
@@ -452,11 +438,8 @@ void Solution::winResize(int width, int height)
 
 int Solution::updateObjects(int numFrames)
 {
-	float timer = numFrames * 0.05;
 	
-	shader.useProgram(1);
-	shader.copyFloatToShader(timer, "timer");
-
+	world.update(numFrames);
 	glutPostRedisplay();
 	return 0;
 }
