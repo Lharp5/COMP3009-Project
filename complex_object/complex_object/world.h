@@ -20,10 +20,17 @@ public:
 	GraphicsObject* getObject(std::string id);
 	ParticleSystem* getEffect(std::string id);
 	int render(Matrix4f projMat, Matrix4f viewMatrix);
+	
+	void update(int frame);
+
+	void setLight(Vector3f pos, Vector4f col);
 private:
 	std::vector<GraphicsObject*> objects;
 	std::vector<ParticleSystem*> effects;
 	std::vector<Shader*> shaders;
+
+	Vector3f lightPos;
+	Vector4f lightColour;
 };
 
 

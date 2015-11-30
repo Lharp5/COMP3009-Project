@@ -56,16 +56,19 @@ ParticleSystem* World::getEffect(std::string id)
 	return NULL;
 }
 
+void World::setLight(Vector3f pos, Vector4f col)
+{
+	lightPos = pos;
+	lightColour = col;
+}
 
 int World::render(Matrix4f projMat, Matrix4f viewMatrix)
-{	
-	Vector4f lightPos = viewMatrix * Vector4f(0, 0, 0, 1);
-	Vector4f lightColour = Vector4f(0.612, 0.165, 0, 1.0);
+{
 	for (std::vector<Shader*>::iterator i = shaders.begin(); i < shaders.end(); ++i){
 		(*i)->useProgram(1);
 		(*i)->copyMatrixToShader(viewMatrix, "view");
 		(*i)->copyMatrixToShader(projMat, "projection");
-		(*i)->copyVectorToShader(lightPos, "light_position");
+		(*i)->copyVectorToShader(viewMatrix * Vector4f(lightPos, 1.0f), "light_position");
 		(*i)->copyVectorToShader(lightColour, "light_colour");
 	}
 	for (std::vector<GraphicsObject*>::iterator i = objects.begin(); i < objects.end(); ++i){
@@ -75,4 +78,15 @@ int World::render(Matrix4f projMat, Matrix4f viewMatrix)
 		(*i)->render();
 	}
 	return 0;
+}
+
+void World::update(int frame)
+{
+	float timer = frame * 0.05;
+
+	for (std::vector<Shader*>::iterator i = shaders.begin(); i < shaders.end(); ++i){
+		(*i)->useProgram(1);
+		(*i)->copyFloatToShader(timer, "timer");
+	}
+	
 }

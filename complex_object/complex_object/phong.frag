@@ -10,10 +10,6 @@ uniform vec4 diffuse;
 uniform vec4 specular;
 uniform float shine;
 
-uniform float ambientOn;
-uniform float diffuseOn;
-uniform float specularOn;
-
 
 in Data{
 	vec4 color;
@@ -68,16 +64,8 @@ void main()
 
 	calculate_light(light_position.xyz, Id, Is);
 	// output the colour
-	if(ambientOn == 1.0){
-		colour_val += texture2D(texture, In.texCoord) * ambient;
-		//colour_val += In.color * ambient;
-	}
-	if(diffuseOn == 1.0){
-		//colour_val += In.color * diffuse*Id * light_colour;
-		colour_val += texture2D(texture, In.texCoord) * diffuse*Id * light_colour;
-	}
-	if(specularOn == 1.0){
-		colour_val +=  specular*Is * light_colour;  //is this needed?
-	}
+	colour_val += texture2D(texture, In.texCoord) * ambient; //ambient
+	colour_val += texture2D(texture, In.texCoord) * diffuse*Id * light_colour; //difuse
+	colour_val +=  specular*Is * light_colour; ///specular
 	color = colour_val;
 }

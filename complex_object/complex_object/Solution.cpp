@@ -265,6 +265,8 @@ int Solution::initSolution()
 	world.addShader(&rockShader);
 	world.addShader(&surfaceShader);
 
+	world.setLight(Vector3f(0, 0, 0), Vector4f(0.612, 0.165, 0, 1.0));
+
 	err:
 	return 0;
 }
@@ -286,9 +288,6 @@ void Solution::setSolution(Solution * _sol)
 
 void Solution::render()
 {
-
-	Vector4f lightPos;
-	Vector4f lightColour = Vector4f(0.612, 0.165, 0, 1.0);
 	Matrix4f projMat;	
 
 	// use the created shader
@@ -300,59 +299,10 @@ void Solution::render()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_POINTS);
 
 	// move matrix to shader
-	//shader.copyMatrixToShader(viewMat, "view");
 	
-	lightPos = camera.getViewMatrix() * Vector4f(0, 0, 0, 1);
 
 	// set the projection matrix
 	projMat = Matrix4f::symmetricPerspectiveProjectionMatrix(30, 2, .1, 1000);
-	// move matrix to shader
-	shader.useProgram(1);
-	shader.copyMatrixToShader(camera.getViewMatrix(), "view");
-	shader.copyMatrixToShader(projMat, "projection");
-
-	shader.copyFloatToShader(ambientOn, "ambientOn");
-	shader.copyFloatToShader(diffuseOn, "diffuseOn");
-	shader.copyFloatToShader(specularOn, "specularOn");
-
-	shader.copyVectorToShader(lightPos, "light_position");
-	shader.copyVectorToShader(lightColour, "light_colour");
-
-
-	surfaceShader.useProgram(1);
-	surfaceShader.copyMatrixToShader(camera.getViewMatrix(), "view");
-	surfaceShader.copyMatrixToShader(projMat, "projection");
-
-	surfaceShader.copyFloatToShader(ambientOn, "ambientOn");
-	surfaceShader.copyFloatToShader(diffuseOn, "diffuseOn");
-	surfaceShader.copyFloatToShader(specularOn, "specularOn");
-
-	surfaceShader.copyVectorToShader(lightPos, "light_position");
-	surfaceShader.copyVectorToShader(lightColour, "light_colour");
-
-	rockShader.useProgram(1);
-	rockShader.copyMatrixToShader(camera.getViewMatrix(), "view");
-	rockShader.copyMatrixToShader(projMat, "projection");
-
-	rockShader.copyFloatToShader(ambientOn, "ambientOn");
-	rockShader.copyFloatToShader(diffuseOn, "diffuseOn");
-	rockShader.copyFloatToShader(specularOn, "specularOn");
-
-	rockShader.copyVectorToShader(lightPos, "light_position");
-	rockShader.copyVectorToShader(lightColour, "light_colour");
-	
-	//phong shader
-
-	phongShader.useProgram(1);
-	phongShader.copyMatrixToShader(camera.getViewMatrix(), "view");
-	phongShader.copyMatrixToShader(projMat, "projection");
-
-	phongShader.copyFloatToShader(ambientOn, "ambientOn");
-	phongShader.copyFloatToShader(diffuseOn, "diffuseOn");
-	phongShader.copyFloatToShader(specularOn, "specularOn");
-
-	phongShader.copyVectorToShader(lightPos, "light_position");
-	phongShader.copyVectorToShader(lightColour, "light_colour");
 	// render the objects
 	world.render(projMat, camera.getViewMatrix());
 	glutSwapBuffers();
@@ -474,11 +424,8 @@ void Solution::winResize(int width, int height)
 
 int Solution::updateObjects(int numFrames)
 {
-	float timer = numFrames * 0.05;
 	
-	shader.useProgram(1);
-	shader.copyFloatToShader(timer, "timer");
-
+	world.update(numFrames);
 	glutPostRedisplay();
 	return 0;
 }
