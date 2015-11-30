@@ -219,6 +219,20 @@ int Solution::initSolution()
 		rc = -1;
 		goto err;
 	}
+	
+	/*rc = rockShader.createShaderProgram("phong.vert", "phong.frag");
+	if (rc != 0) {
+		fprintf(stderr, "Error in generating shader (solution)\n");
+		rc = -1;
+		goto err;
+	}
+	
+	rc = rockShader.createShaderProgram("phong.vert", "phong.frag");
+	if (rc != 0) {
+		fprintf(stderr, "Error in generating shader (solution)\n");
+		rc = -1;
+		goto err;
+	}*/
 
 	texture.loadTextures("tree_bark_long.jpg", GL_TEXTURE_2D, GL_TEXTURE1);
 	fireTexture.loadTextures("flame_particle.png", GL_TEXTURE_2D, GL_TEXTURE2);

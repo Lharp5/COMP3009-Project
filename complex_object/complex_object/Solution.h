@@ -82,6 +82,9 @@ public:
 	Shader phongShader;
 	Shader surfaceShader;
 	Shader rockShader;
+	Shader plankShader;
+	Shader BillBoardShader;
+
 	int numFrames;
 	static Solution *sol;
 

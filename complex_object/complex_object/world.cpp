@@ -83,10 +83,10 @@ int World::render(Matrix4f projMat, Matrix4f viewMatrix)
 void World::update(int frame)
 {
 	float timer = frame * 0.05;
+	float circtime = sin(fmod(timer / 5.0f, M_PI_2)); //same time calculation we use on the flames
 
 	for (std::vector<Shader*>::iterator i = shaders.begin(); i < shaders.end(); ++i){
 		(*i)->useProgram(1);
 		(*i)->copyFloatToShader(timer, "timer");
 	}
-	
 }
