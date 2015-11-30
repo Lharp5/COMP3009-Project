@@ -3,16 +3,19 @@
 
 #include "glew.h"
 #include "glut.h"
+#include "nuss_math.h"
 #include "Shader.h"
 #include "graphicsObject.h"
+#include <time.h>
 
 class ParticleSystem: public GraphicsObject{
 public:
 	ParticleSystem();
 	~ParticleSystem();
 	int ParticleSystem::createVAO(Shader newShader, Vertices vtx, Indices ind);
-	static int ParticleSystem::createSphere(int numLong, int numLat, Vertices &vtx, Indices &ind);
-	virtual int render(Matrix4f base);
+	static int ParticleSystem::createSphere(int numParticles, float maxspray, Vertices &vtx, Indices &ind);
+	static int ParticleSystem::createCone(int numParticles, float maxspray, Vertices &vtx, Indices &ind);
+	virtual int render();
 private:
 
 };

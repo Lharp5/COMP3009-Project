@@ -169,9 +169,9 @@ int Solution::timer(int operation)
 int Solution::initSolution()
 {
 	//initialize the camera.
-	Vector3f viewerPosition = Vector3f(0, 1, 5);
+	Vector3f viewerPosition = Vector3f(0, 0.25, 4);
 	//Vector3f viewerPosition = Vector3f(0, 0, 5);
-	Vector3f lookAtPoint = Vector3f(0, 1, 0);
+	Vector3f lookAtPoint = Vector3f(0, 0.25, 0);
 	//Vector3f lookAtPoint = Vector3f(0, 0, 0);
 	Vector3f upVector = Vector3f(0, 1, 0);
 
@@ -184,7 +184,7 @@ int Solution::initSolution()
 	//fancy object
 	Surface* surface  = new Surface();
 	Texture texture, fireTexture, grassTexture, rockTexture;
-	Material material;
+	Material material, fireMat;
 	Campfire* campfire = new Campfire();
 
 	material.setShine(10);
@@ -225,7 +225,25 @@ int Solution::initSolution()
 	grassTexture.loadTextures("grass_texture3.jpg", GL_TEXTURE_2D, GL_TEXTURE3);
 	rockTexture.loadTextures("rock_texture.jpg", GL_TEXTURE_2D, GL_TEXTURE4);
 
-	campfire->setupCampfire(&phongShader, &texture, &shader, &fireTexture, &rockShader, &rockTexture);
+	//TODO replace with particle effect
+	ParticleSystem *fire = new ParticleSystem();
+	ParticleSystem::createCone(60000, 1, vtx, ind);
+	//Sphere *fire = new Sphere();
+	//Sphere::createSphere(200, 100, vtx, ind, Vector4f(1, 0, 0, 1));
+
+	fireMat.setAmbient(Vector4f(1, 1, 1, 1));
+
+	fire->setId("fire");
+	fire->setMaterial(fireMat);
+	fire->createVAO(shader, vtx, ind);
+	fire->setInitialPosition(0,-0.5, 0);
+	fire->setInitialRotations(0, 0, 0);
+	fire->setScale(0.45, 0.5, 0.45);
+	fire->setTexture(fireTexture);
+
+	world.addEffect(fire);
+
+	campfire->setupCampfire(&phongShader, &texture, &rockShader, &rockTexture, fire);
 	campfire->setId("campfire");
 	campfire->setInitialPosition(0, 0, 0);
 	campfire->setInitialRotations(0, 0, 0);
@@ -242,6 +260,10 @@ int Solution::initSolution()
 	surface->setScale(10, 10, 10);
 	world.addObject(surface);
 	
+	world.addShader(&phongShader);
+	world.addShader(&shader);
+	world.addShader(&rockShader);
+	world.addShader(&surfaceShader);
 
 	err:
 	return 0;
@@ -332,7 +354,7 @@ void Solution::render()
 	phongShader.copyVectorToShader(lightPos, "light_position");
 	phongShader.copyVectorToShader(lightColour, "light_colour");
 	// render the objects
-	world.render();
+	world.render(projMat, camera.getViewMatrix());
 	glutSwapBuffers();
 }
 

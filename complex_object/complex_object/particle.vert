@@ -21,9 +21,8 @@ const float two_pi = 2.0*pi;
 
 void main(){
 	
-	vec4 upVector = model * vec4(0,1,0,1); //world up vector
-	vec4 pos = model * vec4(vtxPos, 1.0);
-	vec4 norm =  transpose(inverse(view * model)) * vec4(vtxNorm, 1.0);
+	vec3 upVector = vec3(0,1,0);
+	vec3 pos = vtxPos;
 	
 	particle_id = vtxCol.r;
 
@@ -34,15 +33,14 @@ void main(){
 	float circtime = sin(rem); // Get time value in [0..1], according to a sinusoidal wave
 	
 	// Set up parameters of the particle motion
-    float t = abs(circtime)*(0.3 + abs(norm.y)); // Our time parameter
+    float t = abs(circtime)*(0.3 + abs(vtxNorm.y)); // Our time parameter
     float accel = 1.2; // An acceleration applied to the particles coming from some attraction force
     float slow = 0.98; // Allows us to slow down the motion, control its speed
 
     pos += slow*upVector*accel*t*t; // Particle moves up
 
 	// transform the vertex position
-	pos = view * pos;
-	gl_Position = pos;	
+	gl_Position = view *  model * vec4(pos, 1.0);	
 
 	// Define amount of blending depending on the cyclic time    
 	float alpha = 1.0 - circtime*circtime;

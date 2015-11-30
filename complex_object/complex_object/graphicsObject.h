@@ -107,6 +107,13 @@ public:
 	*	Purpose:	to retrieve the shader of the specific object
 	*/
 	Shader* const getShader();
+	/*
+	*	Gets Derived matrix
+	*	returns the matrix the render will be using
+	*/
+	Matrix4f const getTransformationMatrix();
+
+	void setParent(GraphicsObject *);
 
 protected:
 	static int id;
@@ -131,6 +138,7 @@ protected:
 	
 	//heirarchical graphics rendering
 	std::vector<GraphicsObject*> children;
+	GraphicsObject* parent;
 
 public:
 	void setInitialRotations(float rollAngle, float pitchAngle, float yawAngle);

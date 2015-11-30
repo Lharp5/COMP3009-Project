@@ -12,7 +12,7 @@ in float particle_id[];
 
 // Attributes passed with the material file
 uniform mat4 projection;
-const float particle_size = 0.7;
+const float particle_size = 0.03;
 
 // Attributes passed to the fragment shader
 out vec4 frag_colour;

@@ -11,7 +11,7 @@ public:
 	Campfire();
 	~Campfire();
 
-	void setupCampfire(Shader* logShader, Texture* logTexture, Shader *fireShader, Texture* fireTexture, Shader* rockShader, Texture* rockTexture);
+	void setupCampfire(Shader* logShader, Texture* logTexture, Shader* rockShader, Texture* rockTexture, ParticleSystem* fire);
 	void update();
 private:
 	void setupRocks(Shader* rockShader, Texture* rockTexture);

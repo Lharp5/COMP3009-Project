@@ -9,7 +9,7 @@ Campfire::~Campfire()
 
 }
 
-void Campfire::setupCampfire(Shader *logShader, Texture* logTexture, Shader *fireShader, Texture* fireTexture, Shader* rockShader, Texture* rockTexture)
+void Campfire::setupCampfire(Shader *logShader, Texture* logTexture,  Shader* rockShader, Texture* rockTexture, ParticleSystem* fire)
 {
 	Vertices vtx;
 	Indices ind;
@@ -64,22 +64,9 @@ void Campfire::setupCampfire(Shader *logShader, Texture* logTexture, Shader *fir
 	log4->setScale(0.125, 0.125, 0.5);
 	addChild(log4);
 
-	//TODO replace with particle effect
-	ParticleSystem *fire = new ParticleSystem();
-	ParticleSystem::createSphere(60, 30, vtx, ind);
-	//Sphere *fire = new Sphere();
-	//Sphere::createSphere(200, 100, vtx, ind, Vector4f(1, 0, 0, 1));
-
-	fireMat.setAmbient(Vector4f(1, 1, 1, 1));
 	
-	fire->setId("fire");
-	fire->setMaterial(fireMat);
-	fire->createVAO(*fireShader, vtx, ind);
-	fire->setInitialPosition(0, 0, 0);
-	fire->setInitialRotations(0, 0, 0);
-	fire->setScale(0.15, 0.15, 0.15);
-	fire->setTexture(*fireTexture);
-	addChild(fire);
+	//dont add it to child as since its a particleSystem it will be rendered differntly in the world.
+	fire->setParent(this);
 
 	//circle of rocks around my campfire
 	setupRocks(rockShader, rockTexture);

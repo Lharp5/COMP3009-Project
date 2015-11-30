@@ -3,6 +3,7 @@
 
 #include "graphicsObject.h"
 #include <vector>
+#include "particle_system.h"
 class World
 {
 public:
@@ -14,10 +15,15 @@ public:
 	*	Purpose:	add a root object to the World, this will put the object at the top of the world heirarchy. Note gets copied over.
 	*/
 	bool addObject(GraphicsObject* myObject);
+	bool addEffect(ParticleSystem* effect);
+	bool addShader(Shader* shader);
 	GraphicsObject* getObject(std::string id);
-	int render();
+	ParticleSystem* getEffect(std::string id);
+	int render(Matrix4f projMat, Matrix4f viewMatrix);
 private:
 	std::vector<GraphicsObject*> objects;
+	std::vector<ParticleSystem*> effects;
+	std::vector<Shader*> shaders;
 };
 
 
