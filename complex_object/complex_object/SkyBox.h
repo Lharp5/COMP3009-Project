@@ -55,7 +55,7 @@ public:
 	SkyBox(void);
 	~SkyBox(void);
 	int loadSkybox(char ** texFileName);
-	void SkyBox::displaySkybox(camera cam);
+	void SkyBox::displaySkybox(Camera cam);
 	GLuint getTexHandle(void);
 
 

@@ -174,9 +174,9 @@ int SkyBox::loadSkybox(char ** texFileName)
 
 /**********************************************************************************************/
 
-void SkyBox::displaySkybox(camera cam)
+void SkyBox::displaySkybox(Camera cam)
 {
-
+	/*
 	int t = 1;  // remove
 
 	
@@ -276,7 +276,7 @@ void SkyBox::displaySkybox(camera cam)
 		
 	glEnable(GL_DEPTH_TEST);    // need depth test to correctly draw 3D objects 
 
-	return;
+	return;*/
 
 }
 
