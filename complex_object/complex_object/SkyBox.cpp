@@ -180,6 +180,7 @@ void SkyBox::displaySkybox(Camera cam)
 
 	
 	glDisable(GL_DEPTH_TEST);    // need depth test to correctly draw 3D objects 
+	glDisable(GL_CULL_FACE);
 
 	Matrix4f viewMat, projMat, modelMat, m;
 	
@@ -274,7 +275,7 @@ void SkyBox::displaySkybox(Camera cam)
 	//glutSwapBuffers();
 		
 	glEnable(GL_DEPTH_TEST);    // need depth test to correctly draw 3D objects 
-
+	glEnable(GL_CULL_FACE);
 	return;
 
 }

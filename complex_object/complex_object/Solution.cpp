@@ -179,12 +179,12 @@ int Solution::initSolution()
 	camera.setCamera(viewerPosition, lookAtPoint, upVector, projection);
 
 	char *sbTextureNameSunnyDay[6] = {
-		"TropicalSunnyDayLeft2048.png",
-		"TropicalSunnyDayRight2048.png",
-		"TropicalSunnyDayUp2048.png",
-		"TropicalSunnyDayDown2048.png",
-		"TropicalSunnyDayFront2048.png",
-		"TropicalSunnyDayBack2048.png" };
+		"nightsky_west.bmp",
+		"nightsky_east.bmp",
+		"nightsky_up.bmp",
+		"nightsky_down.bmp",
+		"nightsky_south.bmp",
+		"nightsky_north.bmp"};
 
 	world.initWorld(sbTextureNameSunnyDay);
 	
@@ -249,7 +249,7 @@ int Solution::initSolution()
 
 	texture.loadTextures("tree_bark_long.jpg", GL_TEXTURE_2D, GL_TEXTURE1);
 	fireTexture.loadTextures("flame_particle.png", GL_TEXTURE_2D, GL_TEXTURE2);
-	grassTexture.loadTextures("grass_texture3.jpg", GL_TEXTURE_2D, GL_TEXTURE3);
+	grassTexture.loadTextures("nightsky_down.bmp.jpg", GL_TEXTURE_2D, GL_TEXTURE3);
 	rockTexture.loadTextures("rock_texture.jpg", GL_TEXTURE_2D, GL_TEXTURE4);
 	woodTexture.loadTextures("wood_texture.jpg", GL_TEXTURE_2D, GL_TEXTURE5);
 	signTexture.loadTextures("sample.png", GL_TEXTURE_2D, GL_TEXTURE6);
