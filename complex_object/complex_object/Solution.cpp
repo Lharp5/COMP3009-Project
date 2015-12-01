@@ -65,7 +65,7 @@ int Solution::initOpenGL()
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowPosition(0, 0);
 	glutInitWindowSize(800, 400);
-	glutCreateWindow("Drawing Basic Objects");
+	glutCreateWindow("Campfire");
 	glClearColor(0, 0, 0, 1);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -340,7 +340,7 @@ void Solution::render()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_POINTS);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	// render the objects
 	world.render(camera);
