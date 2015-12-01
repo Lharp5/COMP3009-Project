@@ -243,7 +243,7 @@ void SkyBox::displaySkybox(Camera cam)
 	glUniform3f(cameraPositiontLoc, camPos.x, camPos.y, camPos.z);
 
 //	glActiveTexture (GL_TEXTURE1);
-	glActiveTexture(GL_TEXTURE3);
+	glActiveTexture(GL_TEXTURE7);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texHandle);
 	GLuint texLoc = glGetUniformLocation(shaderProg, "texCube");
     glUniform1i(texLoc, 3);
