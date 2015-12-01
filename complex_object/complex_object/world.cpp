@@ -8,6 +8,12 @@ World::~World()
 {
 }
 
+void World::initWorld(char** skyBoxTexture)
+{
+	sky.loadSkybox(skyBoxTexture);
+	sky.init();
+}
+
 bool World::addObject(GraphicsObject* obj)
 {
 	
@@ -62,13 +68,15 @@ void World::setLight(Vector3f pos, Vector4f col)
 	lightColour = col;
 }
 
-int World::render(Matrix4f projMat, Matrix4f viewMatrix)
+int World::render(Camera cam)
 {
+	sky.displaySkybox(cam);
+
 	for (std::vector<Shader*>::iterator i = shaders.begin(); i < shaders.end(); ++i){
 		(*i)->useProgram(1);
-		(*i)->copyMatrixToShader(viewMatrix, "view");
-		(*i)->copyMatrixToShader(projMat, "projection");
-		(*i)->copyVectorToShader(viewMatrix * Vector4f(lightPos, 1.0f), "light_position");
+		(*i)->copyMatrixToShader(cam.getViewMatrix(), "view");
+		(*i)->copyMatrixToShader(cam.getProjectionMatrix(), "projection");
+		(*i)->copyVectorToShader(cam.getViewMatrix() * Vector4f(lightPos, 1.0f), "light_position");
 		(*i)->copyVectorToShader(lightColour, "light_colour");
 	}
 	for (std::vector<GraphicsObject*>::iterator i = objects.begin(); i < objects.end(); ++i){

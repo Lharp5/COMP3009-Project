@@ -174,8 +174,19 @@ int Solution::initSolution()
 	Vector3f lookAtPoint = Vector3f(0, 0.25, 0);
 	//Vector3f lookAtPoint = Vector3f(0, 0, 0);
 	Vector3f upVector = Vector3f(0, 1, 0);
+	Matrix4f projection = Matrix4f::symmetricPerspectiveProjectionMatrix(30, 2, .1, 1000);
 
-	camera.setCamera(viewerPosition, lookAtPoint, upVector);
+	camera.setCamera(viewerPosition, lookAtPoint, upVector, projection);
+
+	char *sbTextureNameSunnyDay[6] = {
+		"TropicalSunnyDayLeft2048.png",
+		"TropicalSunnyDayRight2048.png",
+		"TropicalSunnyDayUp2048.png",
+		"TropicalSunnyDayDown2048.png",
+		"TropicalSunnyDayFront2048.png",
+		"TropicalSunnyDayBack2048.png" };
+
+	world.initWorld(sbTextureNameSunnyDay);
 	
 	int rc;
 	Vertices vtx;
@@ -322,23 +333,17 @@ void Solution::setSolution(Solution * _sol)
 
 void Solution::render()
 {
-	Matrix4f projMat;	
 
 	// use the created shader
 	shader.useProgram(1);
-
+	glEnable(GL_DEPTH_TEST);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_POINTS);
 
-	// move matrix to shader
-	
-
-	// set the projection matrix
-	projMat = Matrix4f::symmetricPerspectiveProjectionMatrix(30, 2, .1, 1000);
 	// render the objects
-	world.render(projMat, camera.getViewMatrix());
+	world.render(camera);
 	glutSwapBuffers();
 }
 

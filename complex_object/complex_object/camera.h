@@ -11,13 +11,15 @@ public:
 	Camera();
 	~Camera();
 
-	void setCamera(Vector3f position, Vector3f lookAtPoint, Vector3f upVector);
+	void setCamera(Vector3f position, Vector3f lookAtPoint, Vector3f upVector, Matrix4f projection);
 
 	void setOrientation(Vector3f lookAtVector, Vector3f upVector);
 	void roll(float degrees);
 	void yaw(float degrees);
 	void pitch(float degrees);
 
+	Matrix4f getProjectionMatrix();
+	void setProjectionMatrix(Matrix4f proj);
 
 	void setPosition(float x, float y, float z);
 	void setPosition(Vector3f v);
@@ -31,11 +33,14 @@ public:
 	void moveLeft(float units);
 
 	Matrix4f getViewMatrix();
+	Vector3f getPosition();
 
 private:
 	Vector3f position;
 	Vector3f upVector;
 	Vector3f lookAtVector;
+	
+	Matrix4f projectionMatrix;
 
 	void updateOrientation(Matrix4f rotMat);
 };

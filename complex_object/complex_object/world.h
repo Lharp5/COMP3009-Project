@@ -4,6 +4,7 @@
 #include "graphicsObject.h"
 #include <vector>
 #include "particle_system.h"
+#include "SkyBox.h"
 class World
 {
 public:
@@ -19,8 +20,8 @@ public:
 	bool addShader(Shader* shader);
 	GraphicsObject* getObject(std::string id);
 	ParticleSystem* getEffect(std::string id);
-	int render(Matrix4f projMat, Matrix4f viewMatrix);
-	
+	int render(Camera cam);
+	void initWorld(char** skyBoxTexture);
 	void update(int frame);
 
 	void setLight(Vector3f pos, Vector4f col);
@@ -31,6 +32,8 @@ private:
 
 	Vector3f lightPos;
 	Vector4f lightColour;
+
+	SkyBox sky;
 };
 
 

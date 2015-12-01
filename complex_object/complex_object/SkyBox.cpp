@@ -176,7 +176,6 @@ int SkyBox::loadSkybox(char ** texFileName)
 
 void SkyBox::displaySkybox(Camera cam)
 {
-	/*
 	int t = 1;  // remove
 
 	
@@ -185,7 +184,7 @@ void SkyBox::displaySkybox(Camera cam)
 	Matrix4f viewMat, projMat, modelMat, m;
 	
 	// set local camera for the skybox
-	camera c1 = cam;
+	Camera c1 = cam;
 	//c1.changeAbsPoition(0,0,0);
 	//c1.changeLookAtVector(1, 1, 1);
 
@@ -203,11 +202,11 @@ void SkyBox::displaySkybox(Camera cam)
 
 
 	// setting up the viewpoint transformation
-	viewMat = c1.getViewMatrix(NULL);
+	viewMat = c1.getViewMatrix();
 
 	// setting up the projection transformation  make sure that it is the same projection as the display function!!!
 	//projMat = 	Matrix4f::symmetricPerspectiveProjectionMatrix(30, 1, 0.1, 500);
-	projMat = cam.getProjectionMatrix(NULL);
+	projMat = cam.getProjectionMatrix();
 	
 	// frustum matrix	
 	//projMat = Matrix4f::frustumProjectionMatrix(-1,-1,1,1, 10,100);
@@ -276,7 +275,7 @@ void SkyBox::displaySkybox(Camera cam)
 		
 	glEnable(GL_DEPTH_TEST);    // need depth test to correctly draw 3D objects 
 
-	return;*/
+	return;
 
 }
 
