@@ -66,6 +66,9 @@
     <ClInclude Include="particle_system.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sign.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="complex_object.cpp">
@@ -105,6 +108,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="particle_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sign.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

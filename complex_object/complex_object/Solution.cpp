@@ -183,9 +183,11 @@ int Solution::initSolution()
 
 	//fancy object
 	Surface* surface  = new Surface();
-	Texture texture, fireTexture, grassTexture, rockTexture;
+	Texture texture, fireTexture, grassTexture, rockTexture, woodTexture, signTexture;
 	Material material, fireMat;
 	Campfire* campfire = new Campfire();
+	Sign* sign1 = new Sign();
+	Sign* sign2 = new Sign();
 
 	material.setShine(10);
 	material.setSpecular(Vector4f(0.2, 0.2, 0.2, 1));
@@ -220,24 +222,26 @@ int Solution::initSolution()
 		goto err;
 	}
 	
-	/*rc = rockShader.createShaderProgram("phong.vert", "phong.frag");
+	rc = woodShader.createShaderProgram("phong.vert", "phong.frag");
 	if (rc != 0) {
 		fprintf(stderr, "Error in generating shader (solution)\n");
 		rc = -1;
 		goto err;
 	}
 	
-	rc = rockShader.createShaderProgram("phong.vert", "phong.frag");
+	rc = signShader.createShaderProgram("phong.vert", "phong.frag");
 	if (rc != 0) {
 		fprintf(stderr, "Error in generating shader (solution)\n");
 		rc = -1;
 		goto err;
-	}*/
+	}
 
 	texture.loadTextures("tree_bark_long.jpg", GL_TEXTURE_2D, GL_TEXTURE1);
 	fireTexture.loadTextures("flame_particle.png", GL_TEXTURE_2D, GL_TEXTURE2);
 	grassTexture.loadTextures("grass_texture3.jpg", GL_TEXTURE_2D, GL_TEXTURE3);
 	rockTexture.loadTextures("rock_texture.jpg", GL_TEXTURE_2D, GL_TEXTURE4);
+	woodTexture.loadTextures("wood_texture.jpg", GL_TEXTURE_2D, GL_TEXTURE5);
+	signTexture.loadTextures("sample.png", GL_TEXTURE_2D, GL_TEXTURE6);
 
 	//TODO replace with particle effect
 	ParticleSystem *fire = new ParticleSystem();
@@ -264,6 +268,20 @@ int Solution::initSolution()
 	campfire->setScale(1, 1, 1);
 	world.addObject(campfire);
 
+	sign1->setupSign(&woodShader, &woodTexture, &signShader, &signTexture);
+	sign1->setId("sign1");
+	sign1->setInitialPosition(-3, 0, -3);
+	sign1->setInitialRotations(0, 0, 45);
+	sign1->setScale(1, 1, 1);
+	world.addObject(sign1);
+
+	sign2->setupSign(&woodShader, &woodTexture, &signShader, &signTexture);
+	sign2->setId("sign2");
+	sign2->setInitialPosition(3, 0, -3);
+	sign2->setInitialRotations(0, 0, -45);
+	sign2->setScale(1, 1, 1);
+	world.addObject(sign2);
+
 	Surface::createSurface(6, 3, 100, 100, vtx, ind);
 	surface->createVAO(surfaceShader, vtx, ind);
 	surface->setId("grass");
@@ -278,6 +296,8 @@ int Solution::initSolution()
 	world.addShader(&shader);
 	world.addShader(&rockShader);
 	world.addShader(&surfaceShader);
+	world.addShader(&woodShader);
+	world.addShader(&signShader);
 
 	world.setLight(Vector3f(0, 0, 0), Vector4f(0.612, 0.165, 0, 1.0));
 

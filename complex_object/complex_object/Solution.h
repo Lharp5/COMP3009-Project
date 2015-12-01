@@ -47,6 +47,7 @@
 #include "camera.h"
 #include "campfire.h"
 #include "Surface.h"
+#include "sign.h"
 #include <time.h>
 
 
@@ -82,8 +83,8 @@ public:
 	Shader phongShader;
 	Shader surfaceShader;
 	Shader rockShader;
-	Shader plankShader;
-	Shader BillBoardShader;
+	Shader woodShader;
+	Shader signShader;
 
 	int numFrames;
 	static Solution *sol;
