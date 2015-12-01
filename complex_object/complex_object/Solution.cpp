@@ -251,7 +251,7 @@ int Solution::initSolution()
 
 	texture.loadTextures("tree_bark_long.jpg", GL_TEXTURE_2D, GL_TEXTURE1);
 	fireTexture.loadTextures("flame_particle.png", GL_TEXTURE_2D, GL_TEXTURE2);
-	grassTexture.loadTextures("nightsky_down.bmp.jpg", GL_TEXTURE_2D, GL_TEXTURE3);
+	grassTexture.loadTextures("nightsky_down.bmp", GL_TEXTURE_2D, GL_TEXTURE3);
 	rockTexture.loadTextures("rock_texture.jpg", GL_TEXTURE_2D, GL_TEXTURE4);
 	woodTexture.loadTextures("wood_texture.jpg", GL_TEXTURE_2D, GL_TEXTURE5);
 	signTexture.loadTextures("sample.png", GL_TEXTURE_2D, GL_TEXTURE6);
