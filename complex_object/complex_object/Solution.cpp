@@ -202,6 +202,8 @@ int Solution::initSolution()
 
 	material.setShine(10);
 	material.setSpecular(Vector4f(0.2, 0.2, 0.2, 1));
+	material.setAmbient(Vector4f(1.0, 1.0, 1.0, 1));
+	material.setDiffuse(Vector4f(1.0, 1.0, 1.0, 1));
 
 	// create the shader object
 	rc = shader.createShaderProgram("particle.vert", "particle.frag", "particle.geom");
@@ -300,7 +302,7 @@ int Solution::initSolution()
 	surface->setMaterial(material);
 	surface->setInitialPosition(0, -0.3, 0);
 	surface->setInitialRotations(0, 180, 0);
-	surface->setScale(10, 10, 10);
+	surface->setScale(1, 1, 1);
 	world.addObject(surface);
 	
 	world.addShader(&phongShader);
