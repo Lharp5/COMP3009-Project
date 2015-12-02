@@ -274,21 +274,21 @@ int Solution::initSolution()
 
 	world.addEffect(fire);
 
-	campfire->setupCampfire(&phongShader, &texture, &rockShader, &rockTexture, fire);
+	campfire->setupCampfire(&phongShader, &texture, &phongShader, &rockTexture, fire);
 	campfire->setId("campfire");
 	campfire->setInitialPosition(0, 0, 0);
 	campfire->setInitialRotations(0, 0, 0);
 	campfire->setScale(1, 1, 1);
 	world.addObject(campfire);
 
-	sign1->setupSign(&woodShader, &woodTexture, &signShader, &signTexture);
+	sign1->setupSign(&phongShader, &woodTexture, &phongShader, &signTexture);
 	sign1->setId("sign1");
 	sign1->setInitialPosition(-3, 0, -3);
 	sign1->setInitialRotations(0, 0, 45);
 	sign1->setScale(1, 1, 1);
 	world.addObject(sign1);
 
-	sign2->setupSign(&woodShader, &woodTexture, &signShader, &signTexture);
+	sign2->setupSign(&phongShader, &woodTexture, &phongShader, &signTexture);
 	sign2->setId("sign2");
 	sign2->setInitialPosition(3, 0, -3);
 	sign2->setInitialRotations(0, 0, -45);
