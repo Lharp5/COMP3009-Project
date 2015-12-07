@@ -189,6 +189,17 @@ err:
 int ParticleSystem::render()
 {
 	Matrix4f modelMat;	// final model matrix
+	
+	//passing in the material information
+	if (materialUsed){
+		material.render(shader);
+	}
+
+	//passing the texture sample information
+	if (textureUsed){
+		texture.bindToTextureUnit();
+		texture.setTextureSampler(shader, "texture");
+	}
 
 	glDepthMask(GL_FALSE);
 	glEnable(GL_BLEND);
@@ -211,17 +222,6 @@ int ParticleSystem::render()
 
 	// unbind the vao
 	glBindVertexArray(0);
-
-	//passing in the material information
-	if (materialUsed){
-		material.render(shader);
-	}
-
-	//passing the texture sample information
-	if (textureUsed){
-		texture.bindToTextureUnit();
-		texture.setTextureSampler(shader, "texture");
-	}
 
 	renderChildren(modelMat);
 	glDisable(GL_BLEND);

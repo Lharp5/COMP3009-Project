@@ -41,7 +41,7 @@ Solution *Solution::sol = NULL;
 
 /****************************************************************************/
 
-Solution::Solution() : numFrames(0), ambientOn(1.0), diffuseOn(1.0), specularOn(1.0)
+Solution::Solution() : numFrames(0)
 
 {
 }
@@ -206,7 +206,7 @@ int Solution::initSolution()
 	material.setDiffuse(Vector4f(1.0, 1.0, 1.0, 1));
 
 	// create the shader object
-	rc = shader.createShaderProgram("particle.vert", "particle.frag", "particle.geom");
+	rc = particleShader.createShaderProgram("particle.vert", "particle.frag", "particle.geom");
 	//rc = shader.createShaderProgram("phong.vert", "phong.frag");
 	if (rc != 0) {
 		fprintf(stderr, "Error in generating shader (solution)\n");
@@ -215,34 +215,6 @@ int Solution::initSolution()
 	}
 
 	rc = phongShader.createShaderProgram("phong.vert", "phong.frag");
-	if (rc != 0) {
-		fprintf(stderr, "Error in generating shader (solution)\n");
-		rc = -1;
-		goto err;
-	}
-
-	rc = surfaceShader.createShaderProgram("phong.vert", "phong.frag");
-	if (rc != 0) {
-		fprintf(stderr, "Error in generating shader (solution)\n");
-		rc = -1;
-		goto err;
-	}
-
-	rc = rockShader.createShaderProgram("phong.vert", "phong.frag");
-	if (rc != 0) {
-		fprintf(stderr, "Error in generating shader (solution)\n");
-		rc = -1;
-		goto err;
-	}
-	
-	rc = woodShader.createShaderProgram("phong.vert", "phong.frag");
-	if (rc != 0) {
-		fprintf(stderr, "Error in generating shader (solution)\n");
-		rc = -1;
-		goto err;
-	}
-	
-	rc = signShader.createShaderProgram("phong.vert", "phong.frag");
 	if (rc != 0) {
 		fprintf(stderr, "Error in generating shader (solution)\n");
 		rc = -1;
@@ -266,7 +238,7 @@ int Solution::initSolution()
 
 	fire->setId("fire");
 	fire->setMaterial(fireMat);
-	fire->createVAO(shader, vtx, ind);
+	fire->createVAO(particleShader, vtx, ind);
 	fire->setInitialPosition(0,-0.5, 0);
 	fire->setInitialRotations(0, 0, 0);
 	fire->setScale(0.45, 0.5, 0.45);
@@ -296,7 +268,7 @@ int Solution::initSolution()
 	world.addObject(sign2);
 
 	Surface::createSurface(6, 3, 100, 100, vtx, ind);
-	surface->createVAO(surfaceShader, vtx, ind);
+	surface->createVAO(phongShader, vtx, ind);
 	surface->setId("grass");
 	surface->setTexture(grassTexture);
 	surface->setMaterial(material);
@@ -306,11 +278,7 @@ int Solution::initSolution()
 	world.addObject(surface);
 	
 	world.addShader(&phongShader);
-	world.addShader(&shader);
-	world.addShader(&rockShader);
-	world.addShader(&surfaceShader);
-	world.addShader(&woodShader);
-	world.addShader(&signShader);
+	world.addShader(&particleShader);
 
 	world.setLight(Vector3f(0, 0, 0), Vector4f(0.612, 0.165, 0, 1.0));
 
@@ -335,9 +303,6 @@ void Solution::setSolution(Solution * _sol)
 
 void Solution::render()
 {
-
-	// use the created shader
-	shader.useProgram(1);
 	glEnable(GL_DEPTH_TEST);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -379,45 +344,6 @@ void Solution::keyboard(unsigned char key, int x, int y)
 		break;
 	case 'e':
 		camera.roll(1);
-		break;
-	case '+':
-		world.getObject("ball")->getMaterial()->increaseShine(2);
-		break;
-	case '-':
-		world.getObject("ball")->getMaterial()->reduceShine(2);
-		break;
-	case 'M':
-		ambientOn = 0.0;
-		break;
-	case 'm':
-		ambientOn = 1.0;
-		break;
-	case 'N':
-		diffuseOn = 0.0;
-		break;
-	case 'n':
-		diffuseOn = 1.0;
-		break;
-	case 'B':
-		specularOn = 0.0;
-		break;
-	case 'b':
-		specularOn = 1.0;
-		break;
-	case'i':
-		world.getObject("ball")->incrementScale(0.5, 0, 0);
-		break;
-	case'j':
-		world.getObject("ball")->incrementScale(-0.5, 0, 0);
-		break;
-	case'k':
-		world.getObject("ball")->incrementScale(0, 0.5, 0);
-		break;
-	case'l':
-		world.getObject("ball")->incrementScale(0, -0.5, 0);
-		break;
-	case'r': //resetting our scale back to our initial scale
-		world.getObject("ball")->setScale(1, 1, 1);
 		break;
 	default:
 		return;

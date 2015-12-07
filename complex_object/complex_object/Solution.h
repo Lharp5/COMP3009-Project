@@ -79,20 +79,11 @@ public:
 
 	Camera camera;
 	World world;
-	Shader shader;
+	Shader particleShader;
 	Shader phongShader;
-	Shader surfaceShader;
-	Shader rockShader;
-	Shader woodShader;
-	Shader signShader;
 
 	int numFrames;
 	static Solution *sol;
-
-	float ambientOn;
-	float specularOn;
-	float diffuseOn;
-	
 
 	void render();
 	void keyboard(unsigned char key, int x, int y);
