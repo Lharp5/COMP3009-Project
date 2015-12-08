@@ -94,6 +94,7 @@
     <ClInclude Include="particle_system.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="sign.h" />
+    <ClInclude Include="SkyBox.h" />
     <ClInclude Include="Solution.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="Surface.h" />
@@ -111,6 +112,7 @@
     <ClCompile Include="particle_system.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="sign.cpp" />
+    <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="Solution.cpp" />
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="Surface.cpp" />

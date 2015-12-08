@@ -67,6 +67,7 @@ public:
 	int copyVectorToShader(const Vector4f vector, const char* name);
 	int copyVectorToShader(const Vector3f vector, const char* name);
 	int copyFloatToShader(const float num, const char* name);
+	int createShaderProgram(char * vsFileName, char * fsFileName, GLuint *shaderProgramid);
 
 private:
 	GLuint vertShaderid;
@@ -77,9 +78,6 @@ private:
 	int createShaderObj(char* fileName, int shaderType, GLuint *shaderid);
 	// functions creates a shader program.  The two shader programs (vertex and fragment) were already compiled.
 	GLint ceateShaderProgram(GLint vertShaderid, GLint fragShaderid, GLint geoShaderid, GLuint *shaderProgId);
-	int createShaderProgram(char * vsFileName, char * fsFileName, GLuint *shaderProgramid);
-
-
 
 };
 

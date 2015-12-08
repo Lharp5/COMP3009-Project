@@ -202,6 +202,17 @@ int GraphicsObject::render(Matrix4f parentMatrix)
 	Matrix4f transMat;	// translation matrix
 	Matrix4f modelMat;	// final model matrix
 
+	//passing in the material information
+	if (materialUsed){
+		material.render(shader);
+	}
+
+	//passing the texture sample information
+	if (textureUsed){
+		texture.bindToTextureUnit();
+		texture.setTextureSampler(shader, "texture");
+	}
+
 	// set the transformation matrix - the model transfomration
 	modelMat = Matrix4f::identity();
 	
@@ -235,17 +246,6 @@ int GraphicsObject::render(Matrix4f parentMatrix)
 
 	// unbind the vao
 	glBindVertexArray(0);
-
-	//passing in the material information
-	if (materialUsed){
-		material.render(shader);
-	}
-
-	//passing the texture sample information
-	if (textureUsed){
-		texture.bindToTextureUnit();
-		texture.setTextureSampler(shader, "texture");
-	}
 
 	renderChildren(modelMat);
 

@@ -7,7 +7,7 @@ Camera::~Camera()
 {
 }
 
-void Camera::setCamera(Vector3f position, Vector3f lookAtPoint, Vector3f upVector)
+void Camera::setCamera(Vector3f position, Vector3f lookAtPoint, Vector3f upVector, Matrix4f projection)
 {
 	this->position = position;
 	this->upVector = upVector;
@@ -15,6 +15,8 @@ void Camera::setCamera(Vector3f position, Vector3f lookAtPoint, Vector3f upVecto
 
 	lookAtVector.normalize();
 	this->upVector.normalize();
+
+	projectionMatrix = projection;
 }
 
 void Camera::setOrientation(Vector3f lookAtVector, Vector3f upVector)
@@ -106,4 +108,18 @@ void Camera::moveLeft(float units)
 Matrix4f Camera::getViewMatrix()
 {
 	return Matrix4f::cameraMatrix(position, position + lookAtVector, upVector);
+}
+
+Vector3f Camera::getPosition()
+{
+	return position;
+}
+
+Matrix4f Camera::getProjectionMatrix()
+{
+	return projectionMatrix;
+}
+void Camera::setProjectionMatrix(Matrix4f proj)
+{
+	projectionMatrix = proj;
 }
